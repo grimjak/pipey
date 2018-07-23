@@ -34,7 +34,8 @@ def new():
 
     item_doc = {
         'name': request.form['name'],
-        'description': request.form['description']
+        'description': request.form['description'],
+        'employeeNumber': request.form['employeeNumber']
     }
     db.people.insert_one(item_doc)
 
@@ -42,15 +43,26 @@ def new():
 
 @app.route('/people')
 def people():
-
     data = [json.dumps(item, default=json_util.default) for item in db.people.find(projection={'_id':False})]
     return json.dumps(data)
 
 #figure out how to return just the keys, ultimately need keys plus metadata for building input UI
 @app.route('/keys')
 def keys():
-    data = [json.dumps(item, default=json_util.default) for item in db.people.find(projection={'_id':False})]
-    return json.dumps(data)
+    data = list(db.people.find(projection={'_id':False}))
+    keys = set().union(*[d.keys() for d in list(db.people.find(projection={'_id':False}))])
+    return json.dumps(list(keys))
+
+@app.route('/columns')
+def columns():
+    data = db.people.aggregate([{
+                        "$project": { 
+                            "name": { "$type": "$name" }
+                        }
+                    }])
+    for d in data:
+        print d
+    return json.dumps(list(data))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

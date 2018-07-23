@@ -20,4 +20,4 @@ services:
     links:
       - db
   db:
-    image: mongo:3.0.2
+    image: mongo:4.0
