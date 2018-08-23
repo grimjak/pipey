@@ -1,6 +1,5 @@
 env
-.dockerignore
-Dockerfile-dev
+Dockerfile
 Dockerfile-prod
 *.pyc
 htmlcov
