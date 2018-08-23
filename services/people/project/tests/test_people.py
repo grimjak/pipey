@@ -46,9 +46,9 @@ class TestPeopleService(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertIn('Missing data for required field.',
-                            data['firstname'])
+                          data['firstname'])
             self.assertIn('Missing data for required field.',
-                            data['lastname'])
+                          data['lastname'])
 
     def test_add_user_invalid_json_keys(self):
         with self.client:
@@ -106,7 +106,7 @@ class TestPeopleService(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('The requested URL was not found on the server.',
-                        data['message'])
+                          data['message'])
 
     def test_edit_existing_single_user(self):
         person = create_test_user()
@@ -165,7 +165,7 @@ class TestPeopleService(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('The requested URL was not found on the server.',
-                        data['message'])
+                          data['message'])
 
 
 if __name__ == '__main__':

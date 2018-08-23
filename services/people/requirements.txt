@@ -12,3 +12,4 @@ pytest
 gunicorn==19.8.1
 coverage==4.5.1
 flake8===3.5.0
+flask-debugtoolbar==0.10.1

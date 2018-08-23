@@ -4,9 +4,11 @@ from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
+from flask_debugtoolbar import DebugToolbarExtension
 
 db = MongoEngine()
 app = Flask(__name__)
+toolbar = DebugToolbarExtension()
 
 
 def create_app(script_info=None):

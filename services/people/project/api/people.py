@@ -82,14 +82,23 @@ def empty_database():
 
 def create_test_user():
         personSchema = PersonSchema()
-        p, errors = personSchema.load({"firstname": "ted", "lastname": "bear", "employeenumber": "1", "address": "23 blodsfsdf"})
+        p, errors = personSchema.load({"firstname": "ted",
+                                       "lastname": "bear",
+                                       "employeenumber": "1",
+                                       "address": "23 blodsfsdf"})
         p.save()
         return p
 
 
 def create_test_users():
         peopleSchema = PersonSchema(many=True)
-        p, errors = peopleSchema.load([{"firstname": "ted", "lastname": "bear", "employeenumber": "1", "address": "23 blodsfsdf"},
-                                       {"firstname": "bob", "lastname": "holmes", "employeenumber": "2", "address": "77 verulam road"}])
+        p, errors = peopleSchema.load([{"firstname": "ted",
+                                        "lastname": "bear",
+                                        "employeenumber": "1",
+                                        "address": "23 blodsfsdf"},
+                                       {"firstname": "bob",
+                                        "lastname": "holmes",
+                                        "employeenumber": "2",
+                                        "address": "77 verulam road"}])
         PersonModel.objects.insert(p)
         return p
