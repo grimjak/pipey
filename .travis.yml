@@ -13,7 +13,6 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
-  - docker-compose run --user='root' --entrypoint chown worker_test -R myuser:myuser .
   - docker-compose -f docker-compose.yml up --build -d
 
 script:
