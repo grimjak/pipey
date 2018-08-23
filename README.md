@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/grimjak/pipey.svg?branch=master)](https://travis-ci.org/grimjak/pipey)
+[![Build Status](https://travis-ci.com/grimjak/pipey.png?branch=master)](https://travis-ci.com/grimjak/pipey)
 
 
 Services
