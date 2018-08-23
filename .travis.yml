@@ -4,7 +4,7 @@ services:
   - docker
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.21.1
+  DOCKER_COMPOSE_VERSION: 1.22.0
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -13,11 +13,11 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
-  - docker-compose -f docker-compose-dev.yml up --build -d
+  - docker-compose -f docker-compose.yml up --build -d
 
 script:
-  - docker-compose -f docker-compose-dev.yml run api python manage.py test
-  - docker-compose -f docker-compose-dev.yml run api flake8 project
+  - docker-compose -f docker-compose.yml run api python manage.py test
+  - docker-compose -f docker-compose.yml run api flake8 project
 
 after_script:
-  - docker-compose -f docker-compose-dev.yml down
+  - docker-compose -f docker-compose.yml down
