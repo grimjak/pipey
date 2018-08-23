@@ -1,0 +1,14 @@
+flask
+flask-cors==3.0.6
+flask-restful
+flask-testing
+flask-mongoengine
+marshmallow
+flask-marshmallow
+pymongo
+marshmallow_mongoengine
+mongoengine
+pytest
+gunicorn==19.8.1
+coverage==4.5.1
+flake8===3.5.0

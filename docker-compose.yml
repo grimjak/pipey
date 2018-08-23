@@ -1,0 +1,25 @@
+version: '3'
+services:
+  api:
+    build: ./services/people
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=db
+    volumes:
+      - './services/people:/usr/src/app'
+    links:
+      - db
+  db:
+    image: mongo:4.0
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - 80:80
+    depends_on: 
+      - api

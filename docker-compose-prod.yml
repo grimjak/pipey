@@ -1,0 +1,25 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./services/people
+      dockerfile: Dockerfile-prod
+    expose:
+      - "5000"
+    environment:
+      - FLASK_ENV=prod
+      - APP_SETTINGS=project.config.ProductionConfig
+      - DATABASE_URL=db
+    links:
+      - db
+  db:
+    image: mongo:4.0
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-prod
+    restart: always
+    ports: 
+      - 80:80
+    depends_on: 
+      - api

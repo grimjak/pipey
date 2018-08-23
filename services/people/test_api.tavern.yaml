@@ -1,0 +1,49 @@
+test_name: adding and retreiving people
+
+stages:
+  - name: Add a new person
+    request:
+      url: http://api:5000/people/Bob Holmes
+      json:
+        employeenumber: 5
+        address: "77 Verulam Road"
+        startdate: "30/01/16"
+      method: POST
+      headers:
+        content-type: application/json
+    response:
+      status_code: 
+        - 201
+ 
+  - name: Check it can be retrieved
+    request:
+      url: http://api:5000/people/Bob Holmes
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        fullName: "Bob Holmes"
+
+  - name: Check it can be modified
+    request:
+      url: http://api:5000/people/Bob Holmes
+      json:
+        employeenumber: 4
+        address: "77 Verulam Road"
+        startdate: "30/01/16"
+      method: PUT
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+
+  - name: Check it can be deleted
+    request: 
+      url: http://api:5000/people/Bob Holmes
+      method: DELETE
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
