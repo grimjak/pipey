@@ -2,9 +2,36 @@ import json
 import unittest
 
 from project.tests.base import BaseTestCase
-from project.api.people import empty_database, \
-                                create_test_user, \
-                                create_test_users
+from project.api.people import PersonModel, \
+                                PersonSchema
+
+
+def empty_database():
+    PersonModel.objects().delete()
+
+
+def create_test_user():
+        personSchema = PersonSchema()
+        p, errors = personSchema.load({"firstname": "ted",
+                                       "lastname": "bear",
+                                       "employeenumber": "1",
+                                       "address": "23 blodsfsdf"})
+        p.save()
+        return p
+
+
+def create_test_users():
+        peopleSchema = PersonSchema(many=True)
+        p, errors = peopleSchema.load([{"firstname": "ted",
+                                        "lastname": "bear",
+                                        "employeenumber": "1",
+                                        "address": "23 blodsfsdf"},
+                                       {"firstname": "bob",
+                                        "lastname": "holmes",
+                                        "employeenumber": "2",
+                                        "address": "77 verulam road"}])
+        PersonModel.objects.insert(p)
+        return p
 
 
 class TestPeopleService(BaseTestCase):
@@ -152,14 +179,43 @@ class TestPeopleService(BaseTestCase):
             self.assertFalse('foo' in data.keys())
 
     def test_edit_missing_single_user(self):
+        create_test_user()  # ensure there are records
         with self.client:
             response = self.client.put(
-                '/api/people/blah',
+                '/api/people/09',
                 data=json.dumps({
                     'firstname': 'Bob',
                     'lastname': 'Holmes',
                     'address': '77 Verulam Road'
                 }),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('The requested URL was not found on the server.',
+                          data['message'])
+
+    def test_delete_single_user(self):
+        person = create_test_user()
+        with self.client:
+            response = self.client.delete(
+                'api/people/'+str(person.id),
+                content_type='application/json'
+            )
+            # data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            response = self.client.get(
+                'api/people/'+str(person.id),
+                content_type='application/json'
+            )
+            self.assertEqual(response.status_code, 404)
+
+
+    def test_delete_missing_single_user(self):
+        create_test_user()  # ensure there are records
+        with self.client:
+            response = self.client.delete(
+                'api/people/09',
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())

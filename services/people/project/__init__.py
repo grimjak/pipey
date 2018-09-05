@@ -19,6 +19,7 @@ def create_app(script_info=None):
     # enable CORS
     CORS(app)
     db.init_app(app)
+    toolbar.init_app(app)
 
     api_bp = Blueprint('api', __name__)  # split out into another file
     api = Api(api_bp)

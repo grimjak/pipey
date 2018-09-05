@@ -21,6 +21,7 @@
 			"memory": "cpp",
 			"random": "cpp",
 			"thread": "cpp"
-		}
+		},
+		"python.pythonPath": "C:\\Program Files\\Cloudbase Solutions\\OpenStack\\Nova\\Python27\\python.exe"
 	}
 }

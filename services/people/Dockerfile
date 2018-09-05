@@ -1,5 +1,5 @@
 FROM python:2.7-alpine
-uSER root
+USER root
 
 RUN apk update && \
     apk add --virtual build-deps gcc python-dev musl-dev && \

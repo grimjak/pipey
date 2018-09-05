@@ -35,25 +35,22 @@ class Person(Resource):
         result = personSchema.dump(data)
 
         if result.errors:
-            return result.errors, 404
+            return result.errors, 404  # need a test for this
         return result.data, 200
 
     def put(self, _id):
         data = PersonModel.objects.get_or_404(id=_id)
         new = personSchema.update(data, request.get_json())
         if new.errors:
-            return new.errors, 400
+            return new.errors, 400  # need a test for this, try bad json?
         new.data.save()
         result = personSchema.dump(new.data)
-        if result.errors:
-            return result.errors, 400
         return result.data, 200
 
-    def delete(self, name):
-        if db.people.delete_one({"fullName": name}):
-            return 200
-        else:
-            return "Person not Found", 404
+    def delete(self, _id):
+        data = PersonModel.objects.get_or_404(id=_id)
+        data.delete()
+        return 200
 
 
 class People(Resource):
@@ -74,31 +71,3 @@ class People(Resource):
 class Ping(Resource):
     def get(self):
         return {'status': 'success', 'message': 'pong!'}, 200
-
-
-def empty_database():
-    PersonModel.objects().delete()
-
-
-def create_test_user():
-        personSchema = PersonSchema()
-        p, errors = personSchema.load({"firstname": "ted",
-                                       "lastname": "bear",
-                                       "employeenumber": "1",
-                                       "address": "23 blodsfsdf"})
-        p.save()
-        return p
-
-
-def create_test_users():
-        peopleSchema = PersonSchema(many=True)
-        p, errors = peopleSchema.load([{"firstname": "ted",
-                                        "lastname": "bear",
-                                        "employeenumber": "1",
-                                        "address": "23 blodsfsdf"},
-                                       {"firstname": "bob",
-                                        "lastname": "holmes",
-                                        "employeenumber": "2",
-                                        "address": "77 verulam road"}])
-        PersonModel.objects.insert(p)
-        return p

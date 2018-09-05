@@ -3,6 +3,7 @@ import os
 
 class BaseConfig:
     TESTING = False
+    SECRET_KEY = 'my_precious'
     DEBUG_TB_ENABLED = False              # new
     DEBUG_TB_INTERCEPT_REDIRECTS = False  # new
 
