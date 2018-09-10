@@ -1,9 +1,7 @@
-import unittest
-
-from project import db
 from project.tests.base import BaseTestCase
 
-from utils import *
+from utils import create_test_user
+
 
 class TestPeopleModel(BaseTestCase):
 

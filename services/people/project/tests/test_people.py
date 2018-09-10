@@ -2,10 +2,8 @@ import json
 import unittest
 
 from project.tests.base import BaseTestCase
-from project.api.people import PersonModel, \
-                                PersonSchema
 
-from utils import *
+from utils import empty_database, create_test_user, create_test_users
 
 
 class TestPeopleService(BaseTestCase):
@@ -109,7 +107,7 @@ class TestPeopleService(BaseTestCase):
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 404)
+            self.assertEqual(response.status_coddockere, 404)
             self.assertIn('The requested URL was not found on the server.',
                           data['message'])
 
@@ -189,7 +187,6 @@ class TestPeopleService(BaseTestCase):
                 content_type='application/json'
             )
             self.assertEqual(response.status_code, 404)
-
 
     def test_delete_missing_single_user(self):
         create_test_user()  # ensure there are records

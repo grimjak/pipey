@@ -1,6 +1,7 @@
 from project.api.people import PersonModel, \
                                 PersonSchema
 
+
 def empty_database():
     PersonModel.objects().delete()
 
