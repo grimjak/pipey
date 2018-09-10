@@ -5,33 +5,7 @@ from project.tests.base import BaseTestCase
 from project.api.people import PersonModel, \
                                 PersonSchema
 
-
-def empty_database():
-    PersonModel.objects().delete()
-
-
-def create_test_user():
-        personSchema = PersonSchema()
-        p, errors = personSchema.load({"firstname": "ted",
-                                       "lastname": "bear",
-                                       "employeenumber": "1",
-                                       "address": "23 blodsfsdf"})
-        p.save()
-        return p
-
-
-def create_test_users():
-        peopleSchema = PersonSchema(many=True)
-        p, errors = peopleSchema.load([{"firstname": "ted",
-                                        "lastname": "bear",
-                                        "employeenumber": "1",
-                                        "address": "23 blodsfsdf"},
-                                       {"firstname": "bob",
-                                        "lastname": "holmes",
-                                        "employeenumber": "2",
-                                        "address": "77 verulam road"}])
-        PersonModel.objects.insert(p)
-        return p
+from utils import *
 
 
 class TestPeopleService(BaseTestCase):
@@ -51,6 +25,7 @@ class TestPeopleService(BaseTestCase):
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
+                    'username': 'bh',
                     'firstname': 'Bob',
                     'lastname': 'Holmes',
                     'address': '77 Verulam Road'
@@ -59,6 +34,7 @@ class TestPeopleService(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
+            self.assertIn('bh', data['username'])
             self.assertIn('Bob', data['firstname'])
             self.assertIn('Holmes', data['lastname'])
             self.assertIn('77 Verulam Road', data['address'])
@@ -105,6 +81,7 @@ class TestPeopleService(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data), 2)
             for person, d in zip(people, data):
+                self.assertIn(person.username, d['username'])
                 self.assertIn(person.firstname, d['firstname'])
                 self.assertIn(person.lastname, d['lastname'])
                 self.assertIn(person.address, d['address'])
@@ -119,6 +96,7 @@ class TestPeopleService(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
+            self.assertIn(person.username, data['username'])
             self.assertIn(person.firstname, data['firstname'])
             self.assertIn(person.lastname, data['lastname'])
             self.assertIn(person.address, data['address'])
@@ -159,6 +137,7 @@ class TestPeopleService(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
+            self.assertIn(person.username, data['username'])
             self.assertIn(person.firstname, data['firstname'])
             self.assertIn(person.lastname, data['lastname'])
             self.assertIn(person.address, data['address'])
@@ -173,6 +152,7 @@ class TestPeopleService(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
+            self.assertIn(person.username, data['username'])
             self.assertIn(person.firstname, data['firstname'])
             self.assertIn(person.lastname, data['lastname'])
             self.assertIn(person.address, data['address'])

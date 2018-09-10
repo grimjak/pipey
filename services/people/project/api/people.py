@@ -11,11 +11,14 @@ mm = fm.Marshmallow(app)
 
 
 class PersonModel(db.Document):
+    username = db.StringField(required=True)
     firstname = db.StringField(required=True)
     lastname = db.StringField(required=True)
     employeenumber = db.IntField()
     address = db.StringField()
     startdate = db.DateTimeField()
+    active = db.BooleanField(default=True)
+    password = db.StringField()
 
 
 class PersonSchema(ma.ModelSchema):
