@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, current_app
 from flask_restful import Resource
 
 import flask_marshmallow as fm
@@ -6,12 +6,13 @@ import marshmallow_mongoengine as ma
 
 from project import db
 from project import app
+from project import bcrypt
 
 mm = fm.Marshmallow(app)
 
 
 class PersonModel(db.Document):
-    username = db.StringField(required=True)
+    username = db.StringField(required=True, unique=True)
     firstname = db.StringField(required=True)
     lastname = db.StringField(required=True)
     employeenumber = db.IntField()
@@ -19,6 +20,10 @@ class PersonModel(db.Document):
     startdate = db.DateTimeField()
     active = db.BooleanField(default=True)
     password = db.StringField()
+
+    def clean(self):
+        print (self.password)
+        self.password = bcrypt.generate_password_hash(self.password, current_app.config.get('BCRYPT_LOG_ROUNDS')).decode()
 
 
 class PersonSchema(ma.ModelSchema):
@@ -67,7 +72,11 @@ class People(Resource):
 
         if result.errors:
             return result.errors, 400
-        result.data.save()
+        
+        try:
+            result.data.save()
+        except(ValueError) as e:
+            return {'message':'Invalid payload'}, 400
         return PersonSchema().dump(result.data).data, 201
 
 

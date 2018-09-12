@@ -5,11 +5,12 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_bcrypt import Bcrypt
 
 db = MongoEngine()
 app = Flask(__name__)
 toolbar = DebugToolbarExtension()
-
+bcrypt = Bcrypt()
 
 def create_app(script_info=None):
     # core app config
@@ -18,8 +19,10 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
     # enable CORS
     CORS(app)
+
     db.init_app(app)
     toolbar.init_app(app)
+    bcrypt.init_app(app)
 
     api_bp = Blueprint('api', __name__)  # split out into another file
     api = Api(api_bp)

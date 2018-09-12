@@ -11,7 +11,7 @@ class BaseTestCase(TestCase):
         return app
 
     def setUp(self):
-        print "setup test"
+        print("setup test")
 
     def tearDown(self):
-        print "tear down test"
+        print("tear down test")

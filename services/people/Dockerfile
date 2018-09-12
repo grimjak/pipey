@@ -1,9 +1,9 @@
-FROM python:2.7-alpine
+FROM python:3.6.5-slim
 USER root
 
-RUN apk update && \
-    apk add --virtual build-deps gcc python-dev musl-dev && \
-    apk add netcat-openbsd
+RUN apt-get update && \
+    apt-get -y install netcat && \
+    apt-get clean
 
 WORKDIR /usr/src/app
 

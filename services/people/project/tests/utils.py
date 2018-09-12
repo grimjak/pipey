@@ -6,13 +6,18 @@ def empty_database():
     PersonModel.objects().delete()
 
 
-def create_test_user():
+def create_test_user(username="tb",
+                     firstname="ted",
+                     lastname="bear",
+                     address="23 blodstaf",
+                     password="greaterthaneight"):
         personSchema = PersonSchema()
-        p, errors = personSchema.load({"username": "tb",
-                                       "firstname": "ted",
-                                       "lastname": "bear",
+        p, errors = personSchema.load({"username": username,
+                                       "firstname": firstname,
+                                       "lastname": lastname,
                                        "employeenumber": "1",
-                                       "address": "23 blodsfsdf"})
+                                       "address": address,
+                                       "password": password})
         p.save()
         return p
 
@@ -24,7 +29,7 @@ def create_test_users():
                                         "lastname": "bear",
                                         "employeenumber": "1",
                                         "address": "23 blodsfsdf"},
-                                       {"username": "tb",
+                                       {"username": "bh",
                                         "firstname": "bob",
                                         "lastname": "holmes",
                                         "employeenumber": "2",

@@ -3,3 +3,5 @@ Dockerfile
 Dockerfile-prod
 *.pyc
 htmlcov
+.dockerignore
+migrations

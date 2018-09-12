@@ -9,6 +9,7 @@ from utils import empty_database, create_test_user, create_test_users
 class TestPeopleService(BaseTestCase):
     def setUp(self):
         super(TestPeopleService, self).setUp()
+        print("empty db")
         empty_database()
 
     def test_people(self):
@@ -26,7 +27,8 @@ class TestPeopleService(BaseTestCase):
                     'username': 'bh',
                     'firstname': 'Bob',
                     'lastname': 'Holmes',
-                    'address': '77 Verulam Road'
+                    'address': '77 Verulam Road',
+                    'password': 'greaterthaneight'
                 }),
                 content_type='application/json'
             )
@@ -36,6 +38,7 @@ class TestPeopleService(BaseTestCase):
             self.assertIn('Bob', data['firstname'])
             self.assertIn('Holmes', data['lastname'])
             self.assertIn('77 Verulam Road', data['address'])
+
 
     def test_add_user_invalid_json(self):
         with self.client:
@@ -65,6 +68,21 @@ class TestPeopleService(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             self.assertIn('Missing data for required field.', data['lastname'])
 
+    def test_add_user_invalid_json_keys_no_password(self):
+        with self.client:
+            response = self.client.post(
+                '/api/people',
+                data=json.dumps({
+                    'username': 'bh',
+                    'firstname': 'Bob',
+                    'lastname': 'Holmes',
+                    'address': '77 Verulam Road',
+                }),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload', data['message'])
     # add tests for duplicate data
 
     def test_get_all_users(self):
@@ -107,7 +125,7 @@ class TestPeopleService(BaseTestCase):
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_coddockere, 404)
+            self.assertEqual(response.status_code, 404)
             self.assertIn('The requested URL was not found on the server.',
                           data['message'])
 
