@@ -39,7 +39,6 @@ class TestPeopleService(BaseTestCase):
             self.assertIn('Holmes', data['lastname'])
             self.assertIn('77 Verulam Road', data['address'])
 
-
     def test_add_user_invalid_json(self):
         with self.client:
             response = self.client.post(

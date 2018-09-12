@@ -12,6 +12,7 @@ app = Flask(__name__)
 toolbar = DebugToolbarExtension()
 bcrypt = Bcrypt()
 
+
 def create_app(script_info=None):
     # core app config
     app = Flask(__name__)
@@ -28,6 +29,9 @@ def create_app(script_info=None):
     api = Api(api_bp)
 
     app.register_blueprint(api_bp, url_prefix='/api')
+
+    # from project.api.auth import auth_blueprint
+    # app.register_blueprint(auth_blueprint)
 
     # model
     from project.api.people import People, Person, Ping

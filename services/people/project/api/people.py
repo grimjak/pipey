@@ -4,6 +4,9 @@ from flask_restful import Resource
 import flask_marshmallow as fm
 import marshmallow_mongoengine as ma
 
+import datetime
+import jwt
+
 from project import db
 from project import app
 from project import bcrypt
@@ -22,8 +25,39 @@ class PersonModel(db.Document):
     password = db.StringField()
 
     def clean(self):
-        print (self.password)
-        self.password = bcrypt.generate_password_hash(self.password, current_app.config.get('BCRYPT_LOG_ROUNDS')).decode()
+        print(self.password)
+        self.password = bcrypt.generate_password_hash(
+            self.password,
+            current_app.config.get('BCRYPT_LOG_ROUNDS')).decode()
+
+    def encode_auth_token(self, user_id):
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(
+                    days=current_app.config.get('TOKEN_EXPIRATION_DAYS'),
+                    seconds=current_app.config.get('TOKEN_EXPIRATION_SECONDS')
+                ),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                current_app.config.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        try:
+            payload = jwt.decode(
+                auth_token, current_app.config.get('SECRET_KEY'))
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signiture expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
 
 
 class PersonSchema(ma.ModelSchema):
@@ -72,11 +106,11 @@ class People(Resource):
 
         if result.errors:
             return result.errors, 400
-        
+
         try:
             result.data.save()
         except(ValueError) as e:
-            return {'message':'Invalid payload'}, 400
+            return {'message': 'Invalid payload'}, 400
         return PersonSchema().dump(result.data).data, 201
 
 
