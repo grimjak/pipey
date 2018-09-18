@@ -59,5 +59,30 @@ class Logout(Resource):
             return response_object, 403
 
 
+class Status(Resource):
+    def get(self):
+        auth_header = request.headers.get('Authorisation')
+        response_object = {
+            'status': 'fail',
+            'message': 'Provide a valid auth token'
+        }
+        if auth_header:
+            auth_token = auth_header.split(' ')[1]
+            resp = PersonModel.decode_auth_token(auth_token)
+            if ObjectId.is_valid(resp):
+                user = PersonModel.objects.get_or_404(id=ObjectId(resp))
+                response_object['status'] = 'success'
+                response_object['message'] = 'SuSuccess.'
+                print(user)
+                response_object['data'] = personSchema.dump(user).data
+                return response_object, 200
+            else:
+                response_object['message'] = resp
+                return response_object, 401
+        else:
+            return response_object, 401
+
+
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
+api.add_resource(Status, "/status", endpoint="status")

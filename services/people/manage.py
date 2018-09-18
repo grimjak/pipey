@@ -16,7 +16,7 @@ from flask.cli import FlaskGroup
 
 from project import create_app, db
 from project.api.people import People, Person, PersonSchema, PersonModel
-
+from project.tests.utils import create_test_users
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
@@ -50,18 +50,8 @@ def empty_database():
 
 
 @cli.command()
-def create_test_users():
-        peopleSchema = PersonSchema(many=True)
-        p, errors = peopleSchema.load([{"firstname": "ted",
-                                        "lastname": "bear",
-                                        "employeenumber": "1",
-                                        "address": "23 blodsfsdf"},
-                                       {"firstname": "bob",
-                                        "lastname": "holmes",
-                                        "employeenumber": "2",
-                                        "address": "77 verulam road"}])
-        PersonModel.objects.insert(p)
-        return p
+def seed_db():
+    create_test_users()
 
 if __name__ == '__main__':
     cli()
