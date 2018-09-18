@@ -1,5 +1,6 @@
-from flask import request, current_app
-from flask_restful import Resource
+from flask import request, current_app, Blueprint
+from flask_restful import Resource, Api
+
 
 import flask_marshmallow as fm
 import marshmallow_mongoengine as ma
@@ -13,6 +14,9 @@ from project import bcrypt
 
 mm = fm.Marshmallow(app)
 
+api_bp = Blueprint('api', __name__)  # create api blueprint
+api = Api(api_bp)  # register api with blueprint
+
 
 class PersonModel(db.Document):
     username = db.StringField(required=True, unique=True)
@@ -25,7 +29,6 @@ class PersonModel(db.Document):
     password = db.StringField()
 
     def clean(self):
-        print(self.password)
         self.password = bcrypt.generate_password_hash(
             self.password,
             current_app.config.get('BCRYPT_LOG_ROUNDS')).decode()
@@ -38,7 +41,7 @@ class PersonModel(db.Document):
                     seconds=current_app.config.get('TOKEN_EXPIRATION_SECONDS')
                 ),
                 'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'sub': str(user_id)
             }
             return jwt.encode(
                 payload,
@@ -55,7 +58,7 @@ class PersonModel(db.Document):
                 auth_token, current_app.config.get('SECRET_KEY'))
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            return 'Signiture expired. Please log in again.'
+            return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
 
@@ -117,3 +120,9 @@ class People(Resource):
 class Ping(Resource):
     def get(self):
         return {'status': 'success', 'message': 'pong!'}, 200
+
+
+# register resources with api
+api.add_resource(Ping, "/ping", endpoint="ping")
+api.add_resource(People, "/people", endpoint="people")
+api.add_resource(Person, "/people/<string:_id>", endpoint="person")

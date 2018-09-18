@@ -1,7 +1,6 @@
 import os
 
-from flask import Flask, Blueprint
-from flask_restful import Api
+from flask import Flask
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
 from flask_debugtoolbar import DebugToolbarExtension
@@ -25,20 +24,11 @@ def create_app(script_info=None):
     toolbar.init_app(app)
     bcrypt.init_app(app)
 
-    api_bp = Blueprint('api', __name__)  # split out into another file
-    api = Api(api_bp)
-
+    from project.api.people import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
-    # from project.api.auth import auth_blueprint
-    # app.register_blueprint(auth_blueprint)
-
-    # model
-    from project.api.people import People, Person, Ping
-
-    api.add_resource(Ping, "/ping", endpoint="ping")
-    api.add_resource(People, "/people", endpoint="people")
-    api.add_resource(Person, "/people/<string:_id>", endpoint="person")
+    from project.api.auth import auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     @app.shell_context_processor
     def ctx():

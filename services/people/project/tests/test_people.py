@@ -9,7 +9,6 @@ from utils import empty_database, create_test_user, create_test_users
 class TestPeopleService(BaseTestCase):
     def setUp(self):
         super(TestPeopleService, self).setUp()
-        print("empty db")
         empty_database()
 
     def test_people(self):
