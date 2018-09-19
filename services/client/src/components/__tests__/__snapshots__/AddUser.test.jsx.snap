@@ -4,7 +4,19 @@ exports[`AddUser renders a snapshot properly 1`] = `
 <form
   onSubmit={[Function]}
 >
-  &gt;
+  <div
+    className="field"
+  >
+    <input
+      className="input is-large"
+      name="username"
+      onChange={undefined}
+      placeholder="Enter user name"
+      required={true}
+      type="text"
+      value={undefined}
+    />
+  </div>
   <div
     className="field"
   >
