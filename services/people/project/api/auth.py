@@ -14,6 +14,7 @@ personSchema = PersonSchema()
 
 class Login(Resource):
     def post(self):
+        print("post")
         post_data = request.get_json()
         response_object = {
             'status': 'fail',
@@ -25,7 +26,7 @@ class Login(Resource):
         password = post_data.get('password')
         # now get the data from the db
         data = PersonModel.objects.get_or_404(username=username)
-
+        # need better error messages if no password
         if bcrypt.check_password_hash(data.password, password):
             auth_token = data.encode_auth_token(data.id)
             if auth_token:
