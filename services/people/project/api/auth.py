@@ -41,18 +41,22 @@ class Login(Resource):
 
 class Logout(Resource):
     def get(self):
-        auth_header = request.headers.get('Authorisation')
+        auth_header = request.headers.get('Authorization')
         response_object = {
             'status': 'fail',
-            'message': 'Provide a valid auth token'
+            'message': 'Provide a valid auth token.'
         }
         if auth_header:
             auth_token = auth_header.split(' ')[1]
             resp = PersonModel.decode_auth_token(auth_token)
             if ObjectId.is_valid(resp):
-                response_object['status'] = 'success'
-                response_object['message'] = 'Successfully logged out.'
-                return response_object, 200
+                user = PersonModel.objects.get_or_404(id=ObjectId(resp))
+                if not user.active:
+                    return response_object, 401
+                else:
+                    response_object['status'] = 'success'
+                    response_object['message'] = 'Successfully logged out.'
+                    return response_object, 200
             else:
                 response_object['message'] = resp
                 return response_object, 401
@@ -62,10 +66,12 @@ class Logout(Resource):
 
 class Status(Resource):
     def get(self):
-        auth_header = request.headers.get('Authorisation')
+        print("get")
+        auth_header = request.headers.get('Authorization')
+
         response_object = {
             'status': 'fail',
-            'message': 'Provide a valid auth token'
+            'message': 'Provide a valid auth token.'
         }
         if auth_header:
             auth_token = auth_header.split(' ')[1]
@@ -73,8 +79,7 @@ class Status(Resource):
             if ObjectId.is_valid(resp):
                 user = PersonModel.objects.get_or_404(id=ObjectId(resp))
                 response_object['status'] = 'success'
-                response_object['message'] = 'SuSuccess.'
-                print(user)
+                response_object['message'] = 'Success.'
                 response_object['data'] = personSchema.dump(user).data
                 return response_object, 200
             else:
