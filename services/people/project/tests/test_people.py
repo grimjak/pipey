@@ -19,7 +19,17 @@ class TestPeopleService(BaseTestCase):
         self.assertIn('success', data['status'])
 
     def test_add_person(self):
+        create_test_user(username='test', password='test')
         with self.client:
+            resp_login = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test'
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
@@ -29,7 +39,8 @@ class TestPeopleService(BaseTestCase):
                     'address': '77 Verulam Road',
                     'password': 'greaterthaneight'
                 }),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
@@ -39,11 +50,22 @@ class TestPeopleService(BaseTestCase):
             self.assertIn('77 Verulam Road', data['address'])
 
     def test_add_user_invalid_json(self):
+        create_test_user(username='test', password='test')
         with self.client:
+            resp_login = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test'
+                }),
+                content_type='application/json',
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({}),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
@@ -53,21 +75,42 @@ class TestPeopleService(BaseTestCase):
                           data['lastname'])
 
     def test_add_user_invalid_json_keys(self):
+        create_test_user(username='test', password='test')
         with self.client:
+            resp_login = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test'
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
                     'firstname': 'Bob',
                     'address': '77 Verulam Road'
                 }),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertIn('Missing data for required field.', data['lastname'])
 
     def test_add_user_invalid_json_keys_no_password(self):
+        create_test_user(username='test', password='test')
         with self.client:
+            resp_login = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test'
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
@@ -76,11 +119,41 @@ class TestPeopleService(BaseTestCase):
                     'lastname': 'Holmes',
                     'address': '77 Verulam Road',
                 }),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertIn('Invalid payload', data['message'])
+
+    def test_add_user_inactive(self):
+        create_test_user(username='test', password='test', active=False)
+        with self.client:
+            resp_login = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test'
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
+            response = self.client.post(
+                '/api/people',
+                data=json.dumps({
+                    'username': 'bh',
+                    'firstname': 'Bob',
+                    'lastname': 'Holmes',
+                    'address': '77 Verulam Road',
+                }),
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Provide a valid auth token.')
+            self.assertEqual(response.status_code, 401)
+
     # add tests for duplicate data
 
     def test_get_all_users(self):

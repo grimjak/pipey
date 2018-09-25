@@ -1,10 +1,12 @@
 from flask import Blueprint, request
 from flask_restful import Resource, Api
 
-from project.api.people import PersonModel, PersonSchema
+from project.api.people import PersonSchema
+from project.api.model import PersonModel
 from project import bcrypt
 
 from bson.objectid import ObjectId
+from project.api.utils import authenticate
 
 auth_bp = Blueprint('auth', __name__)
 api = Api(auth_bp)
@@ -40,53 +42,25 @@ class Login(Resource):
 
 
 class Logout(Resource):
-    def get(self):
-        auth_header = request.headers.get('Authorization')
+    @authenticate
+    def get(resp, self):
         response_object = {
-            'status': 'fail',
-            'message': 'Provide a valid auth token.'
+            'status': 'success',
+            'message': 'Successfully logged out.'
         }
-        if auth_header:
-            auth_token = auth_header.split(' ')[1]
-            resp = PersonModel.decode_auth_token(auth_token)
-            if ObjectId.is_valid(resp):
-                user = PersonModel.objects.get_or_404(id=ObjectId(resp))
-                if not user.active:
-                    return response_object, 401
-                else:
-                    response_object['status'] = 'success'
-                    response_object['message'] = 'Successfully logged out.'
-                    return response_object, 200
-            else:
-                response_object['message'] = resp
-                return response_object, 401
-        else:
-            return response_object, 403
+        return response_object, 200
 
 
 class Status(Resource):
-    def get(self):
-        print("get")
-        auth_header = request.headers.get('Authorization')
-
+    @authenticate
+    def get(resp, self):
+        user = PersonModel.objects.get_or_404(id=ObjectId(resp))
         response_object = {
-            'status': 'fail',
-            'message': 'Provide a valid auth token.'
+            'status': 'success',
+            'message': 'Success.',
+            'data': personSchema.dump(user).data
         }
-        if auth_header:
-            auth_token = auth_header.split(' ')[1]
-            resp = PersonModel.decode_auth_token(auth_token)
-            if ObjectId.is_valid(resp):
-                user = PersonModel.objects.get_or_404(id=ObjectId(resp))
-                response_object['status'] = 'success'
-                response_object['message'] = 'Success.'
-                response_object['data'] = personSchema.dump(user).data
-                return response_object, 200
-            else:
-                response_object['message'] = resp
-                return response_object, 401
-        else:
-            return response_object, 401
+        return response_object, 200
 
 
 api.add_resource(Login, "/login", endpoint="login")
