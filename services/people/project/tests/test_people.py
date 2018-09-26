@@ -3,7 +3,7 @@ import unittest
 
 from project.tests.base import BaseTestCase
 
-from utils import empty_database, create_test_user, create_test_users
+from utils import empty_database, create_test_user, create_test_users, login
 
 
 class TestPeopleService(BaseTestCase):
@@ -18,18 +18,9 @@ class TestPeopleService(BaseTestCase):
         self.assertIn('pong!', data['message'])
         self.assertIn('success', data['status'])
 
-    def test_add_person(self):
-        create_test_user(username='test', password='test')
+    @login(admin=True)
+    def test_add_person(token, self):
         with self.client:
-            resp_login = self.client.post(
-                '/auth/login',
-                data=json.dumps({
-                    'username': 'test',
-                    'password': 'test'
-                }),
-                content_type='application/json'
-            )
-            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
@@ -49,18 +40,9 @@ class TestPeopleService(BaseTestCase):
             self.assertIn('Holmes', data['lastname'])
             self.assertIn('77 Verulam Road', data['address'])
 
-    def test_add_user_invalid_json(self):
-        create_test_user(username='test', password='test')
+    @login(True)
+    def test_add_user_invalid_json(token, self):
         with self.client:
-            resp_login = self.client.post(
-                '/auth/login',
-                data=json.dumps({
-                    'username': 'test',
-                    'password': 'test'
-                }),
-                content_type='application/json',
-            )
-            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({}),
@@ -74,18 +56,9 @@ class TestPeopleService(BaseTestCase):
             self.assertIn('Missing data for required field.',
                           data['lastname'])
 
-    def test_add_user_invalid_json_keys(self):
-        create_test_user(username='test', password='test')
+    @login(admin=True)
+    def test_add_user_invalid_json_keys(token, self):
         with self.client:
-            resp_login = self.client.post(
-                '/auth/login',
-                data=json.dumps({
-                    'username': 'test',
-                    'password': 'test'
-                }),
-                content_type='application/json'
-            )
-            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
@@ -99,18 +72,9 @@ class TestPeopleService(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             self.assertIn('Missing data for required field.', data['lastname'])
 
-    def test_add_user_invalid_json_keys_no_password(self):
-        create_test_user(username='test', password='test')
+    @login(admin=True)
+    def test_add_user_invalid_json_keys_no_password(token, self):
         with self.client:
-            resp_login = self.client.post(
-                '/auth/login',
-                data=json.dumps({
-                    'username': 'test',
-                    'password': 'test'
-                }),
-                content_type='application/json'
-            )
-            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
@@ -126,18 +90,9 @@ class TestPeopleService(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             self.assertIn('Invalid payload', data['message'])
 
-    def test_add_user_inactive(self):
-        create_test_user(username='test', password='test', active=False)
+    @login(active=False)
+    def test_add_user_inactive(token, self):
         with self.client:
-            resp_login = self.client.post(
-                '/auth/login',
-                data=json.dumps({
-                    'username': 'test',
-                    'password': 'test'
-                }),
-                content_type='application/json'
-            )
-            token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.post(
                 '/api/people',
                 data=json.dumps({
@@ -154,7 +109,25 @@ class TestPeopleService(BaseTestCase):
             self.assertTrue(data['message'] == 'Provide a valid auth token.')
             self.assertEqual(response.status_code, 401)
 
-    # add tests for duplicate data
+    @login
+    def test_add_user_not_admin(token, self):
+        with self.client:
+            response = self.client.post(
+                '/api/people',
+                data=json.dumps({
+                    'username': 'bh',
+                    'firstname': 'Bob',
+                    'lastname': 'Holmes',
+                    'address': '77 Verulam Road',
+                }),
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] ==
+                            'You do not have permission to do that.')
+            self.assertEqual(response.status_code, 401)
 
     def test_get_all_users(self):
         people = create_test_users()

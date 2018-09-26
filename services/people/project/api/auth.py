@@ -60,6 +60,7 @@ class Status(Resource):
             'message': 'Success.',
             'data': personSchema.dump(user).data
         }
+        print(response_object)
         return response_object, 200
 
 

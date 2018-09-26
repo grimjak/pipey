@@ -26,3 +26,8 @@ def authenticate(f):
             return response_object, 401
         return f(resp, *args, **kwargs)
     return decorated_function
+
+
+def is_admin(user_id):
+    user = PersonModel.objects.get_or_404(id=user_id)
+    return user.admin

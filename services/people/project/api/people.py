@@ -8,7 +8,7 @@ import marshmallow_mongoengine as ma
 from project import app
 
 from project.api.model import PersonModel
-from project.api.utils import authenticate
+from project.api.utils import authenticate, is_admin
 
 mm = fm.Marshmallow(app)
 
@@ -64,10 +64,20 @@ class People(Resource):
         if result.errors:
             return result.errors, 400
 
+        if not is_admin(resp):
+            response_object = {
+                'status': 'fail',
+                'message': 'You do not have permission to do that.'
+            }
+            return response_object, 401
         try:
             result.data.save()
         except(ValueError) as e:
-            return {'message': 'Invalid payload'}, 400
+            response_object = {
+                'status': 'fail',
+                'message': 'Invalid payload'
+            }
+            return response_object, 400
         return PersonSchema().dump(result.data).data, 201
 
 

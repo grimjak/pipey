@@ -16,6 +16,7 @@ class PersonModel(db.Document):
     startdate = db.DateTimeField()
     active = db.BooleanField(default=True)
     password = db.StringField()
+    admin = db.BooleanField(default=False, required=True)
 
     def clean(self):
         self.password = bcrypt.generate_password_hash(

@@ -12,6 +12,7 @@ class TestPeopleModel(BaseTestCase):
         self.assertTrue(person.id)
         self.assertTrue(person.active)
         self.assertTrue(person.password)
+        self.assertFalse(person.admin)
 
     def test_add_user_duplicate_username(self):
         with self.assertRaises(NotUniqueError):
