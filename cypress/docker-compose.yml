@@ -1,0 +1,11 @@
+version: '3'
+services:
+    cypress:
+        build: ./cypress
+        image: cypress
+        container_name: cypress
+        volumes:
+            - ./cypress:/root/cypress
+        depends_on:
+            - client
+            - nginx

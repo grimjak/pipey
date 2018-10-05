@@ -9,22 +9,43 @@ const users = [
         "firstname": "ted",
         "lastname": "bear",
         "employeenumber": "1",
-        "address": "23 blodsfsdf"
+        "address": "23 blodsfsdf",
+        "active": true,
+        "admin": false
     },
     {
         "username": "bh",
         "firstname": "bob",
         "lastname": "holmes",
         "employeenumber": "2",
-        "address": "77 verulam road"
+        "address": "77 verulam road",
+        "active": true,
+        "admin": false
     }
 ];
 
 test('UsersList renders properly', () => {
     const wrapper = shallow(<UsersList users={users}/>);
     const element = wrapper.find('h4');
-    expect(element.length).toBe(2);
-    expect(element.get(0).props.children[0]).toBe('tb');
+    expect(wrapper.find('h1').get(0).props.children).toBe('All Users');
+    const table = wrapper.find('table');
+    //table head
+    expect(wrapper.find('thead').length).toBe(1);
+    const th = wrapper.find('th');
+    expect(th.length).toBe(4);
+    expect(th.get(0).props.children).toBe('ID');
+    expect(th.get(1).props.children).toBe('Username');
+    expect(th.get(2).props.children).toBe('Active');
+    expect(th.get(3).props.children).toBe('Admin');
+    //table body
+    expect(wrapper.find('tbody').length).toBe(1);
+    expect(wrapper.find('tbody > tr').length).toBe(2);
+    const td = wrapper.find('tbody > tr > td');
+    expect(td.length).toBe(8);
+    expect(td.get(1).props.children).toBe('tb');
+    expect(td.get(2).props.children).toBe('true');
+    expect(td.get(3).props.children).toBe('false');
+    
 });
 
 test('UserList renders a snapshot properly', () => {

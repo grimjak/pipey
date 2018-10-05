@@ -1,0 +1,9 @@
+FROM cypress/browsers:chrome69
+WORKDIR /root
+
+#COPY ./package.json package.json
+RUN npm i cypress
+COPY . /root/cypress
+COPY ./cypress.json /root
+
+CMD $(npm bin)/cypress run

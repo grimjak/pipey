@@ -11,9 +11,8 @@ const testData = [
             username: '',
             password: ''
         },
-        handleUserFormSubmit: jest.fn(),
-        handleFormChange: jest.fn(),
         isAuthenticated: false,
+        loginUser: jest.fn()
     },
 ];
 
@@ -32,14 +31,16 @@ describe('When not authenticated', () =>{
         });
         it(`${e1.formType} Form submits the form properly`, () => {
             const wrapper = shallow(component);
+            wrapper.instance().handleUserFormSubmit = jest.fn();
+            wrapper.update();
             const input = wrapper.find('input[type="text"]');
-            expect(e1.handleUserFormSubmit).toHaveBeenCalledTimes(0);
-            expect(e1.handleFormChange).toHaveBeenCalledTimes(0);
-            input.simulate('change', { target: {value: 'tb'}});
-            expect(e1.handleFormChange).toHaveBeenCalledTimes(1);
+
+            expect(wrapper.instance().handleUserFormSubmit).toHaveBeenCalledTimes(0);
+            input.simulate(
+                'change', { target: {value: 'tb'}});
             wrapper.find('form').simulate('submit', e1.formData);
-            expect(e1.handleUserFormSubmit).toHaveBeenCalledWith(e1.formData);
-            expect(e1.handleUserFormSubmit).toHaveBeenCalledTimes(1);
+            expect(wrapper.instance().handleUserFormSubmit).toHaveBeenCalledWith(e1.formData);
+            expect(wrapper.instance().handleUserFormSubmit).toHaveBeenCalledTimes(1);
         });
         it(`{e1.formType} Form renders a snapshot properly`, () => {
             const tree = renderer.create(component).toJSON();

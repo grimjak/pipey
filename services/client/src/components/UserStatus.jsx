@@ -8,12 +8,14 @@ class UserStatus extends Component {
         this.state = {
             username:'',
             id:'',
+            active: '',
+            admin: ''
         };
     };
     componentDidMount() {
         if (this.props.isAuthenticated) {
             this.getUserStatus();
-        }
+        };
     };
     getUserStatus(event) {
         const options = {
@@ -29,6 +31,8 @@ class UserStatus extends Component {
             this.setState({
                 username: res.data.data.username,
                 id: res.data.data.id,
+                active: String(res.data.data.active),
+                admin: String(res.data.data.admin)
             })
         })
         .catch((error) => { console.log(error); });
@@ -44,6 +48,8 @@ class UserStatus extends Component {
                 <ul>
                     <li><strong>User ID:</strong> {this.state.id}</li>
                     <li><strong>username:</strong> {this.state.username}</li>
+                    <li><strong>Active:</strong> {this.state.active}</li>
+                    <li><strong>Admin:</strong> {this.state.admin}</li>
                 </ul>
             </div>
         )

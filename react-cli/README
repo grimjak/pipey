@@ -1,0 +1,3 @@
+Dockerfile for running the react cli to build app templates
+
+Run using docker-compose run create-react-app [app name]

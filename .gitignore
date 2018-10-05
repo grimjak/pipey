@@ -67,3 +67,6 @@ typings/
 # next.js build output
 .next
 services/people/htmlcov
+cypress/.Trash-0
+cypress/screenshots
+.bash_history

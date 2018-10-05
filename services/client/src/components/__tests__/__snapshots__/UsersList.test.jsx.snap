@@ -2,17 +2,58 @@
 
 exports[`UserList renders a snapshot properly 1`] = `
 <div>
-  <h4
-    className="box title is-4"
+  <h1
+    className="title is-1"
   >
-    tb
-     
-  </h4>
-  <h4
-    className="box title is-4"
+    All Users
+  </h1>
+  <hr />
+  <br />
+  <table
+    className="table is-hoverable is-fullwidth"
   >
-    bh
-     
-  </h4>
+    <thead>
+      <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Username
+        </th>
+        <th>
+          Active
+        </th>
+        <th>
+          Admin
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td />
+        <td>
+          tb
+        </td>
+        <td>
+          true
+        </td>
+        <td>
+          false
+        </td>
+      </tr>
+      <tr>
+        <td />
+        <td>
+          bh
+        </td>
+        <td>
+          true
+        </td>
+        <td>
+          false
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
