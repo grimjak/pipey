@@ -9,6 +9,23 @@ exports[`When not authenticated {e1.formType} Form renders a snapshot properly 1
   </h1>
   <hr />
   <br />
+  <div>
+    <ul
+      className="validation-list"
+    >
+      <li
+        className="error"
+      >
+        Username is required.
+      </li>
+      <li
+        className="error"
+      >
+        Password is required.
+      </li>
+    </ul>
+    <br />
+  </div>
   <form
     onSubmit={[Function]}
   >
@@ -39,7 +56,8 @@ exports[`When not authenticated {e1.formType} Form renders a snapshot properly 1
       />
     </div>
     <input
-      className="button is-primary is-medium is-fullwidth"
+      className="button btn-primary btn-lg btn-block"
+      disabled={true}
       type="submit"
       value="Submit"
     />

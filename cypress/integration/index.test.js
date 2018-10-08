@@ -7,7 +7,8 @@ describe('Index', () => {
         .get('.navbar-burger').click()
         .get('a').contains('User Status').should('not.be.visible')
         .get('a').contains('Log out').should('not.be.visible')
-        .get('a').contains('Log in');
+        .get('a').contains('Log in')
+        .get('.notification.is-success').should('not.be.visible');
         });
         
 });

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import { loginFormRules } from './form-rules.js';
+import FormErrors from './FormErrors.jsx';
 
 class Form extends Component {
     constructor (props) {
@@ -9,17 +11,21 @@ class Form extends Component {
             formData: {
                 username: '',
                 password: '',
-            }
+            },
+            loginFormRules: loginFormRules,
+            valid: false,
         };
         this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
         this.handleFormChange = this.handleFormChange.bind(this);
     };
     componentDidMount() {
         this.clearForm();
+        this.validateForm();
     };
     componentWillReceiveProps(nextProps) {
         if (this.props.formType !== nextProps.formType) {
             this.clearForm();
+            this.validateForm();
         };
     };
     clearForm() {
@@ -31,6 +37,7 @@ class Form extends Component {
         const obj = this.state.formData;
         obj[event.target.name] = event.target.value;
         this.setState(obj);
+        this.validateForm();
     };
     handleUserFormSubmit(event){
         event.preventDefault();
@@ -45,16 +52,52 @@ class Form extends Component {
             this.clearForm();
             this.props.loginUser(res.data.auth_token);
         })
-        .catch((err) => { console.log(err); });
+        .catch((err) => {
+            console.log("error");
+            this.props.createMessage('User does not exist.', 'danger'); 
+        });
+    };
+    validateForm() {
+        const self = this;
+        const formData = this.state.formData;
+        self.resetRules();
+        //validate rules here
+        if (self.props.formType === 'login') {
+            const formRules = self.state.loginFormRules;
+            if (formData.username.length > 0) formRules[0].valid = true;
+            if (formData.password.length > 0) formRules[1].valid = true;
+            self.setState({loginFormRules: formRules});
+            if (self.allTrue()) self.setState({valid: true});
+        }
+    };
+    allTrue() {
+        let formRules = loginFormRules;
+        for (const rule of formRules) {
+            if (!rule.valid) return false;
+        }
+        return true;
+    };
+    resetRules() {
+        const loginFormRules = this.state.loginFormRules;
+        for (const rule of loginFormRules) {
+            rule.valid = false;
+        }
+        this.setState({loginFormRules: loginFormRules});
+        this.setState({valid: false})
     };
     render() {
         if(this.props.isAuthenticated) {
             return <Redirect to='/' />;
         };
+        let formRules = this.state.loginFormRules;
         return (
             <div>
                 <h1 className="title is-1">{this.props.formType}</h1>
                 <hr/><br/>
+                <FormErrors
+                    formType={this.props.formType}
+                    formRules={formRules}
+                />
                 <form onSubmit={(event) => this.handleUserFormSubmit(event)}>
                     <div className="field">
                         <input
@@ -80,8 +123,9 @@ class Form extends Component {
                     </div>
                     <input
                         type="submit"
-                        className="button is-primary is-medium is-fullwidth"
+                        className="button btn-primary btn-lg btn-block"
                         value="Submit"
+                        disabled={!this.state.valid}
                     />
                 </form>
             </div>

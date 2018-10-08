@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormErrors (with login form) renders a snapshot properly 1`] = `
+<div>
+  <ul
+    className="validation-list"
+  >
+    <li
+      className="error"
+    >
+      Username is required.
+    </li>
+    <li
+      className="error"
+    >
+      Password is required.
+    </li>
+  </ul>
+  <br />
+</div>
+`;

@@ -10,7 +10,7 @@ RUN apt-get update \
     && rm -rf /tmp/*
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY /nginx.conf /etc/nginx/conf.default
+COPY nginx.conf /etc/nginx/conf.d
 
 # COPY swagger.json /usr/share/nginx/html/swagger.json
 COPY start.sh /start.sh
