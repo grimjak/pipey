@@ -29,3 +29,7 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     MONGODB_HOST = os.environ.get('DATABASE_URL')
     DEBUG = False
+
+class StagingConfig(BaseConfig):
+    MOONGDB_HOST = os.environ.get('DATABASE_URL')
+    

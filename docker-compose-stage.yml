@@ -3,12 +3,12 @@ services:
   people:
     build:
       context: ./services/people
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-stage
     expose:
       - "5000"
     environment:
       - FLASK_ENV=prod
-      - APP_SETTINGS=project.config.ProductionConfig
+      - APP_SETTINGS=project.config.StagingConfig
       - DATABASE_URL=people-db
       - SECRET_KEY=${SECRET_KEY}
     links:
@@ -18,7 +18,7 @@ services:
   nginx:
     build:
       context: ./services/nginx
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-stage
     restart: always
     ports: 
       - 80:80
@@ -29,21 +29,11 @@ services:
     container_name: client
     build:
       context: ./services/client
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-stage
       args:
         - NODE_ENV=production
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     expose:
       - 80
-    depends_on:
-      - people
-  swagger:
-    build:
-      context: ./services/swagger
-      dockerfile: Dockerfile-prod
-    expose:
-      - 8080
-    environment:
-      - URL=swagger.json
     depends_on:
       - people

@@ -1,5 +1,16 @@
 [![Build Status](https://travis-ci.com/grimjak/pipey.png?branch=master)](https://travis-ci.com/grimjak/pipey)
 
+Environment 
+dev
+export REACT_APP_USERS_SERVICE_URL=http://localhost
+
+staging
+export REACT_APP_USERS_SERVICE_URL=http://DOCKER_MACHINE_STAGING_IP
+
+production
+export REACT_APP_USERS_SERVICE_URL=http://DOCKER_MACHINE_PROD_IP
+export SECRET_KEY=SOMETHING_SECRET
+
 
 Services
 

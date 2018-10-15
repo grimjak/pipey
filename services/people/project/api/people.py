@@ -36,6 +36,7 @@ class Person(Resource):
             return result.errors, 404  # need a test for this
         return result.data, 200
 
+    @authenticate
     def put(self, _id):
         data = PersonModel.objects.get_or_404(id=_id)
         new = personSchema.update(data, request.get_json())
@@ -45,6 +46,7 @@ class Person(Resource):
         result = personSchema.dump(new.data)
         return result.data, 200
 
+    @authenticate
     def delete(self, _id):
         data = PersonModel.objects.get_or_404(id=_id)
         data.delete()

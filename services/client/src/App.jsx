@@ -77,7 +77,7 @@ class App extends Component {
                             <Message
                                 messageName={this.state.messageName}
                                 messageType={this.state.messageType}
-                                removeMessage={this.state.removeMessage}
+                                removeMessage={this.removeMessage}
                             />
                         }
                         <div className="columns">
