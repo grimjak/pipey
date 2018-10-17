@@ -10,7 +10,7 @@ services:
       - FLASK_ENV=prod
       - APP_SETTINGS=project.config.StagingConfig
       - DATABASE_URL=people-db
-      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_KEY=my_precious
     links:
       - people-db
   people-db:
@@ -35,5 +35,15 @@ services:
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     expose:
       - 80
+    depends_on:
+      - people
+  swagger:
+    build:
+      context: ./services/swagger
+      dockerfile: Dockerfile-stage
+    expose:
+      - 8080
+    environment:
+      - URL=swagger.json
     depends_on:
       - people

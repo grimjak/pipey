@@ -37,7 +37,7 @@ class Person(Resource):
         return result.data, 200
 
     @authenticate
-    def put(self, _id):
+    def put(resp, self, _id):
         data = PersonModel.objects.get_or_404(id=_id)
         new = personSchema.update(data, request.get_json())
         if new.errors:
@@ -47,7 +47,7 @@ class Person(Resource):
         return result.data, 200
 
     @authenticate
-    def delete(self, _id):
+    def delete(resp, self, _id):
         data = PersonModel.objects.get_or_404(id=_id)
         data.delete()
         return 200

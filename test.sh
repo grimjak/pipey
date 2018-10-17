@@ -30,7 +30,7 @@ client() {
 # run e2e tests
 e2e() {
     docker-compose -f docker-compose-prod.yml up -d --build
-    docker-compose -f docker-compose-prod.yml run api python manage.py seed-db
+    docker-compose -f docker-compose-prod.yml run people python manage.py seed_db
     docker-compose -f docker-compose-prod.yml -f ./cypress/docker-compose-prod.yml run cypress node_modules/.bin/cypress run --config baseUrl=http://nginx
     #./node_modules/.bin/cypress run --config baseUrl=http://localhost
     inspect $? e2e

@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 # install dependencies
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY package.json /usr/src/app/package.json
-RUN npm install --silent
+RUN npm install --silent --no-cache
 RUN npm install react-scripts@1.1.4 -g --silent
 
 # set environment variables

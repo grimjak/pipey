@@ -3,7 +3,7 @@ import sys
 import json
 
 def update_json_file(url):
-    full_path = os.abspath('services/swagger/swagger.json')
+    full_path = os.path.abspath('services/swagger/swagger.json')
     with open(full_path,'r') as file:
         data = json.load(file)
     data['servers'][0]['url'] = url

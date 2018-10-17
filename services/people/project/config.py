@@ -4,7 +4,7 @@ import os
 class BaseConfig:
     DEBOG = False
     TESTING = False
-    SECRET_KEY = 'my_precious'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     DEBUG_TB_ENABLED = False              # new
     DEBUG_TB_INTERCEPT_REDIRECTS = False  # new
     BCRYPT_LOG_ROUNDS = 13
@@ -30,6 +30,6 @@ class ProductionConfig(BaseConfig):
     MONGODB_HOST = os.environ.get('DATABASE_URL')
     DEBUG = False
 
+
 class StagingConfig(BaseConfig):
-    MOONGDB_HOST = os.environ.get('DATABASE_URL')
-    
+    MONGODB_HOST = os.environ.get('DATABASE_URL')

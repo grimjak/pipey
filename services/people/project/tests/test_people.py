@@ -173,13 +173,15 @@ class TestPeopleService(BaseTestCase):
             self.assertIn('The requested URL was not found on the server.',
                           data['message'])
 
-    def test_edit_existing_single_user(self):
+    @login(admin=True)
+    def test_edit_existing_single_user(token, self):
         person = create_test_user()
         with self.client:
             response = self.client.put(
                 '/api/people/'+str(person.id),
                 data=json.dumps({'firstname': 'Steve'}),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
@@ -187,13 +189,15 @@ class TestPeopleService(BaseTestCase):
             self.assertIn(person.lastname, data['lastname'])
             self.assertIn(person.address, data['address'])
 
-    def test_edit_existing_single_user_no_data(self):
+    @login(admin=True)
+    def test_edit_existing_single_user_no_data(token, self):
         person = create_test_user()
         with self.client:
             response = self.client.put(
                 '/api/people/'+str(person.id),
                 data=json.dumps({}),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
@@ -202,13 +206,15 @@ class TestPeopleService(BaseTestCase):
             self.assertIn(person.lastname, data['lastname'])
             self.assertIn(person.address, data['address'])
 
-    def test_edit_existing_single_user_invalid_data(self):
+    @login(admin=True)
+    def test_edit_existing_single_user_invalid_data(token, self):
         person = create_test_user()
         with self.client:
             response = self.client.put(
                 '/api/people/'+str(person.id),
                 data=json.dumps({'foo': 'bar'}),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
@@ -218,7 +224,8 @@ class TestPeopleService(BaseTestCase):
             self.assertIn(person.address, data['address'])
             self.assertFalse('foo' in data.keys())
 
-    def test_edit_missing_single_user(self):
+    @login(admin=True)
+    def test_edit_missing_single_user(token, self):
         create_test_user()  # ensure there are records
         with self.client:
             response = self.client.put(
@@ -228,19 +235,22 @@ class TestPeopleService(BaseTestCase):
                     'lastname': 'Holmes',
                     'address': '77 Verulam Road'
                 }),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('The requested URL was not found on the server.',
                           data['message'])
 
-    def test_delete_single_user(self):
+    @login(admin=True)
+    def test_delete_single_user(token, self):
         person = create_test_user()
         with self.client:
             response = self.client.delete(
                 'api/people/'+str(person.id),
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             # data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
@@ -250,12 +260,14 @@ class TestPeopleService(BaseTestCase):
             )
             self.assertEqual(response.status_code, 404)
 
-    def test_delete_missing_single_user(self):
+    @login(admin=True)
+    def test_delete_missing_single_user(token, self):
         create_test_user()  # ensure there are records
         with self.client:
             response = self.client.delete(
                 'api/people/09',
-                content_type='application/json'
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)

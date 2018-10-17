@@ -58,13 +58,14 @@ describe('Login', () => {
             .get('input[type="submit"]').click()
             .wait(300);
 
-        // cy.contains('All Users').should('.not.be.visible');
+        cy.get('All Users').should('not.exist');
         cy.contains('login');
+        cy.get('.navbar-burger').click();
         cy.get('.navbar-menu').within(() => {
             cy
-                .get('.navbar-item').contains('User Status').should('.not.be.visible')
-                .get('.navbar-item').contains('Log Out').should('.not.be.visible')
-                .get('.navbar-item').contains('Log In');
+                .get('.navbar-item').contains('User Status').should('not.be.visible')
+                .get('.navbar-item').contains('Log out').should('not.be.visible')
+                .get('.navbar-item').contains('Log in');
         });
         cy
             .get('.notification.is-success').should('not.be.visible')
@@ -72,19 +73,20 @@ describe('Login', () => {
         
         //bad password
         cy
-            .get('a').contains('Log In').click()
+            .get('a').contains('Log in').click()
             .get('input[name="username"]').type('tb')
             .get('input[name="password"]').type('badPassword')
             .get('input[type="submit"]').click()
             .wait(100);
 
-        cy.contains('All Users').should('.not.be.visible');
+        cy.get('All Users').should('not.exist');
         cy.contains('login');
+        //cy.get('.navbar-burger').click();
         cy.get('.navbar-menu').within(() => {
             cy
-                .get('.navbar-item').contains('User Status').should('.not.be.visible')
-                .get('.navbar-item').contains('Log Out').should('.not.be.visible')
-                .get('.navbar-item').contains('Log In');
+                .get('.navbar-item').contains('User Status').should('not.be.visible')
+                .get('.navbar-item').contains('Log out').should('not.be.visible')
+                .get('.navbar-item').contains('Log in');
         });
         cy
             .get('.notification.is-success').should('not.be.visible')
