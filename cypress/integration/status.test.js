@@ -18,8 +18,8 @@ describe('Status', () => {
             .wait(400);
 
         cy.visit('/status');
-        cy.get('.navbar-burger').click();
-        cy.contains('User Status').click();
+        //cy.get('.navbar-burger').click();
+        //cy.contains('User Status').click();
         cy.get('li > strong').contains('User ID:')
             .get('li > strong').contains('username:')
             .get('li').contains('tb')

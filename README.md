@@ -20,7 +20,8 @@ locations - info about locations, buildings, rooms, desks, racks etc. shouldn't 
 projects - high level info about shows, episodes etc. No config data
 files? - info about where actual files are, will be etc. allows for files to be moved between different storage types as required
 assetsMetadata - information about assets including version numebers etc.
-tasks - info about tasks, tasks have start dates, end dates etc.
+tasks - info about tasks, tasks have start dates, end dates etc. Tasks are things that people do
+actions - things that happen automatically based on triggers 
 notes - 
 config - store generic items of configuration which can be related to other things
 itassets - workstations etc.

@@ -1,10 +1,14 @@
 from flask import current_app
 
 
-from project import db
+from project import db, app
 from project import bcrypt
 import datetime
 import jwt
+
+import flask_marshmallow as fm
+import marshmallow_mongoengine as ma
+mm = fm.Marshmallow(app)
 
 
 class PersonModel(db.Document):
@@ -51,3 +55,21 @@ class PersonModel(db.Document):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+
+class PersonSchema(ma.ModelSchema):
+    class Meta:
+        model = PersonModel
+    _links = mm.Hyperlinks({'uri': mm.UrlFor('people.person', _id='<id>')})
+
+
+class SkillModel(db.Document):
+    name = db.StringField(required=True)
+    level = db.StringField(required=True, unique_with="name")  # make name and level unique together
+    description = db.StringField()
+
+
+class SkillSchema(ma.ModelSchema):
+    class Meta:
+        model = SkillModel
+    _links = mm.Hyperlinks({'uri': mm.UrlFor('skill.skill', _id='<id>')})

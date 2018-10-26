@@ -13,9 +13,9 @@ inspect() {
 #run server side tests
 server() {
     docker-compose -f docker-compose.yml up -d --build
-    docker-compose -f docker-compose.yml run api python manage.py test
+    docker-compose -f docker-compose.yml run people python manage.py test
     inspect $? users
-    docker-compose -f docker-compose.yml run api flake8 project
+    docker-compose -f docker-compose.yml run people flake8 project
     inspect $? users-lint
 }
 
@@ -30,8 +30,8 @@ client() {
 # run e2e tests
 e2e() {
     docker-compose -f docker-compose-prod.yml up -d --build
-    docker-compose -f docker-compose-prod.yml run people python manage.py seed_db
-    docker-compose -f docker-compose-prod.yml -f ./cypress/docker-compose-prod.yml run cypress node_modules/.bin/cypress run --config baseUrl=http://nginx
+    docker-compose -f docker-compose-prod.yml run people python manage.py seed-db
+    docker-compose -f ./cypress/docker-compose-prod.yml run cypress node_modules/.bin/cypress run --config baseUrl=$REACT_APP_USERS_SERVICE_URL
     #./node_modules/.bin/cypress run --config baseUrl=http://localhost
     inspect $? e2e
     docker-compose -f docker-compose-prod.yml down

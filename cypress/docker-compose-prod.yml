@@ -2,10 +2,8 @@ version: '3'
 services:
     cypress:
         build:
-            context: ./cypress
+            context: ../cypress
             dockerfile: Dockerfile-prod
         image: cypress
         container_name: cypress
-        depends_on:
-            - client
-            - nginx
+

@@ -3,23 +3,17 @@ from flask_restful import Resource, Api
 
 
 import flask_marshmallow as fm
-import marshmallow_mongoengine as ma
 
 from project import app
 
-from project.api.model import PersonModel
+from project.api.model import PersonModel, PersonSchema
 from project.api.utils import authenticate, is_admin
 
-mm = fm.Marshmallow(app)
+# refactor to create central "peole" service which defines enpoints and blueprints and imports the
+# relevant resources
 
-api_bp = Blueprint('api', __name__)  # create api blueprint
+api_bp = Blueprint('people', __name__)  # create api blueprint
 api = Api(api_bp)  # register api with blueprint
-
-
-class PersonSchema(ma.ModelSchema):
-    class Meta:
-        model = PersonModel
-    _links = mm.Hyperlinks({'uri': mm.UrlFor('api.person', _id='<id>')})
 
 
 personSchema = PersonSchema()

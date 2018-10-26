@@ -12,7 +12,7 @@ class TestPeopleService(BaseTestCase):
         empty_database()
 
     def test_people(self):
-        response = self.client.get('/api/ping')
+        response = self.client.get('/people/ping')
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn('pong!', data['message'])
@@ -22,7 +22,7 @@ class TestPeopleService(BaseTestCase):
     def test_add_person(token, self):
         with self.client:
             response = self.client.post(
-                '/api/people',
+                '/people/people',
                 data=json.dumps({
                     'username': 'bh',
                     'firstname': 'Bob',
@@ -44,7 +44,7 @@ class TestPeopleService(BaseTestCase):
     def test_add_user_invalid_json(token, self):
         with self.client:
             response = self.client.post(
-                '/api/people',
+                '/people/people',
                 data=json.dumps({}),
                 content_type='application/json',
                 headers={'Authorization': f'Bearer {token}'}
@@ -60,7 +60,7 @@ class TestPeopleService(BaseTestCase):
     def test_add_user_invalid_json_keys(token, self):
         with self.client:
             response = self.client.post(
-                '/api/people',
+                '/people/people',
                 data=json.dumps({
                     'firstname': 'Bob',
                     'address': '77 Verulam Road'
@@ -76,7 +76,7 @@ class TestPeopleService(BaseTestCase):
     def test_add_user_invalid_json_keys_no_password(token, self):
         with self.client:
             response = self.client.post(
-                '/api/people',
+                '/people/people',
                 data=json.dumps({
                     'username': 'bh',
                     'firstname': 'Bob',
@@ -94,7 +94,7 @@ class TestPeopleService(BaseTestCase):
     def test_add_user_inactive(token, self):
         with self.client:
             response = self.client.post(
-                '/api/people',
+                '/people/people',
                 data=json.dumps({
                     'username': 'bh',
                     'firstname': 'Bob',
@@ -113,7 +113,7 @@ class TestPeopleService(BaseTestCase):
     def test_add_user_not_admin(token, self):
         with self.client:
             response = self.client.post(
-                '/api/people',
+                '/people/people',
                 data=json.dumps({
                     'username': 'bh',
                     'firstname': 'Bob',
@@ -133,7 +133,7 @@ class TestPeopleService(BaseTestCase):
         people = create_test_users()
         with self.client:
             response = self.client.get(
-                '/api/people',
+                '/people/people',
                 data=json.dumps({}),
                 content_type='application/json'
             )
@@ -150,7 +150,7 @@ class TestPeopleService(BaseTestCase):
         person = create_test_user()
         with self.client:
             response = self.client.get(
-                '/api/people/'+str(person.id),
+                '/people/people/'+str(person.id),
                 data=json.dumps({}),
                 content_type='application/json'
             )
@@ -164,7 +164,7 @@ class TestPeopleService(BaseTestCase):
     def test_get_single_user_no_id(self):
         with self.client:
             response = self.client.get(
-                '/api/people/blah',
+                '/people/people/blah',
                 data=json.dumps({}),
                 content_type='application/json'
             )
@@ -178,7 +178,7 @@ class TestPeopleService(BaseTestCase):
         person = create_test_user()
         with self.client:
             response = self.client.put(
-                '/api/people/'+str(person.id),
+                '/people/people/'+str(person.id),
                 data=json.dumps({'firstname': 'Steve'}),
                 content_type='application/json',
                 headers={'Authorization': f'Bearer {token}'}
@@ -194,7 +194,7 @@ class TestPeopleService(BaseTestCase):
         person = create_test_user()
         with self.client:
             response = self.client.put(
-                '/api/people/'+str(person.id),
+                '/people/people/'+str(person.id),
                 data=json.dumps({}),
                 content_type='application/json',
                 headers={'Authorization': f'Bearer {token}'}
@@ -211,7 +211,7 @@ class TestPeopleService(BaseTestCase):
         person = create_test_user()
         with self.client:
             response = self.client.put(
-                '/api/people/'+str(person.id),
+                '/people/people/'+str(person.id),
                 data=json.dumps({'foo': 'bar'}),
                 content_type='application/json',
                 headers={'Authorization': f'Bearer {token}'}
@@ -229,7 +229,7 @@ class TestPeopleService(BaseTestCase):
         create_test_user()  # ensure there are records
         with self.client:
             response = self.client.put(
-                '/api/people/09',
+                '/people/people/09',
                 data=json.dumps({
                     'firstname': 'Bob',
                     'lastname': 'Holmes',
@@ -248,14 +248,14 @@ class TestPeopleService(BaseTestCase):
         person = create_test_user()
         with self.client:
             response = self.client.delete(
-                'api/people/'+str(person.id),
+                'people/people/'+str(person.id),
                 content_type='application/json',
                 headers={'Authorization': f'Bearer {token}'}
             )
             # data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             response = self.client.get(
-                'api/people/'+str(person.id),
+                'people/people/'+str(person.id),
                 content_type='application/json'
             )
             self.assertEqual(response.status_code, 404)
@@ -265,7 +265,7 @@ class TestPeopleService(BaseTestCase):
         create_test_user()  # ensure there are records
         with self.client:
             response = self.client.delete(
-                'api/people/09',
+                'people/people/09',
                 content_type='application/json',
                 headers={'Authorization': f'Bearer {token}'}
             )

@@ -1,12 +1,13 @@
 import json
 from functools import wraps
 
-from project.api.people import PersonModel, \
-                                PersonSchema
+from project.api.model import PersonModel, PersonSchema, \
+                              SkillModel, SkillSchema
 
 
 def empty_database():
     PersonModel.objects().delete()
+    SkillModel.objects().delete()
 
 
 def create_test_user(username="tb",
@@ -34,6 +35,17 @@ def create_test_users():
     result.append(create_test_user(username='tb'))
     result.append(create_test_user(username='bh'))
     return result
+
+
+def create_test_skill(name="lighting",
+                      level="junior",
+                      description="shot lighting"):
+    skillSchema = SkillSchema()
+    s, errors = skillSchema.load({"name": name,
+                                  "level": level,
+                                  "description": description})
+    s.save()
+    return s
 
 
 def login(admin=False, active=True):

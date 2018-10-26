@@ -25,7 +25,7 @@ def create_app(script_info=None):
     bcrypt.init_app(app)
 
     from project.api.people import api_bp
-    app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(api_bp, url_prefix='/people')
 
     from project.api.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
