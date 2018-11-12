@@ -47,6 +47,11 @@ def create_test_skill(name="lighting",
     s.save()
     return s
 
+def create_test_skills():
+    result = []
+    result.append(create_test_skill(name='lighting'))
+    result.append(create_test_skill(name='comp'))
+    return result
 
 def login(admin=False, active=True):
     def _login(f):

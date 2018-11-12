@@ -15,7 +15,7 @@ COV.start()
 from flask.cli import FlaskGroup
 
 from project import create_app, db
-from project.tests.utils import create_test_users
+from project.tests.utils import create_test_tasks
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
@@ -45,12 +45,13 @@ def cov():
 
 @cli.command()
 def empty_database():
-    PersonModel.objects().delete()
+    from project.api.model import TaskModel
+    TaskModel.objects().delete()
 
 
 @cli.command()
 def seed_db():
-    create_test_users()
+    create_test_tasks()
 
 if __name__ == '__main__':
     cli()

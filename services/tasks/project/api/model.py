@@ -5,29 +5,20 @@ from project import db, app
 from project import bcrypt
 import datetime
 import jwt
-import json
 
 import flask_marshmallow as fm
 import marshmallow_mongoengine as ma
 mm = fm.Marshmallow(app)
 
 
-class PersonModel(db.Document):
-    username = db.StringField(required=True, unique=True)
-    firstname = db.StringField(required=True)
-    lastname = db.StringField(required=True)
-    employeenumber = db.IntField()
-    address = db.StringField()
+class TaskModel(db.Document):
+    name = db.StringField(required=True)
+    description = db.StringField()
+    duration = db.IntField()
     startdate = db.DateTimeField()
-    active = db.BooleanField(default=True)
-    password = db.StringField()
-    admin = db.BooleanField(default=False, required=True)
+    status = db.BooleanField(default=True) #convert to enum
 
-    def clean(self):
-        self.password = bcrypt.generate_password_hash(
-            self.password,
-            current_app.config.get('BCRYPT_LOG_ROUNDS')).decode()
-
+    # shouldnt need this on task model
     def encode_auth_token(self, user_id):
         try:
             payload = {
@@ -46,31 +37,20 @@ class PersonModel(db.Document):
         except Exception as e:
             return e
 
+
     @staticmethod
     def decode_auth_token(auth_token):
         try:
             payload = jwt.decode(
                 auth_token, current_app.config.get('SECRET_KEY'))
-            return json.dumps(payload['sub'])
+            return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
 
 
-class PersonSchema(ma.ModelSchema):
+class TaskSchema(ma.ModelSchema):
     class Meta:
-        model = PersonModel
-    _links = mm.Hyperlinks({'uri': mm.UrlFor('people.person', _id='<id>')})
-
-
-class SkillModel(db.Document):
-    name = db.StringField(required=True)
-    level = db.StringField(required=True, unique_with="name")  # make name and level unique together
-    description = db.StringField()
-
-
-class SkillSchema(ma.ModelSchema):
-    class Meta:
-        model = SkillModel
-    _links = mm.Hyperlinks({'uri': mm.UrlFor('people.skill', _id='<id>')})
+        model = TaskModel
+    _links = mm.Hyperlinks({'uri': mm.UrlFor('tasks.task', _id='<id>')})

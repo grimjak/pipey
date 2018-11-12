@@ -15,6 +15,21 @@ services:
       - people-db
   people-db:
     image: mongo:4.0
+  tasks:
+    build: ./services/tasks
+    ports:
+      - "5001:5000"
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=tasks-db
+      - SECRET_KEY=my_precious
+    volumes:
+      - './services/tasks:/usr/src/app'
+    links:
+      - tasks-db
+  tasks-db:
+    image: mongo:4.0
   nginx:
     build:
       context: ./services/nginx

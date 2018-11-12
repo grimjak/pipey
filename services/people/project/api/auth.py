@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_restful import Resource, Api
 
-from project.api.people import PersonSchema
+from project.api.people_resources import PersonSchema
 from project.api.model import PersonModel
 from project import bcrypt
 
@@ -63,7 +63,7 @@ class Status(Resource):
         print(response_object)
         return response_object, 200
 
-
+# should this be centralised to keep all the endpoints in one place?
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
 api.add_resource(Status, "/status", endpoint="status")
