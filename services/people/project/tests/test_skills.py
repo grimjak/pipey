@@ -110,7 +110,11 @@ class TestSkillService(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data), 2)
             for skill, d in zip(skills, data):
-                self.assertIn(person.name, d['username'])
-                self.assertIn(person.level, d['firstname'])
-                self.assertIn(person.name, d['lastname'])
-                self.assertIn(person.level, d['address'])
+                self.assertIn(skill.name, d['name'])
+                self.assertIn(skill.level, d['level'])
+                self.assertIn(skill.name, d['name'])
+                self.assertIn(skill.level, d['level'])
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -3,7 +3,7 @@ from flask import request
 
 from project.api.model import PersonModel, PersonSchema
 from project.api.model import SkillModel, SkillSchema
-from project.api.utils import authenticate, is_admin
+from project.api.utils import authenticate
 
 personSchema = PersonSchema()
 peopleSchema = PersonSchema(many=True)
@@ -47,11 +47,9 @@ class People(Resource):
     def post(resp, self):
         jsonrequest = request.get_json()
         result = PersonSchema().load(jsonrequest)
-
         if result.errors:
             return result.errors, 400
-
-        if not is_admin(resp):
+        if not resp['admin']:
             response_object = {
                 'status': 'fail',
                 'message': 'You do not have permission to do that.'
@@ -88,7 +86,7 @@ class Skills(Resource):
         if result.errors:
             return result.errors, 400
 
-        if not is_admin(resp):
+        if not resp['admin']:
             response_object = {
                 'status': 'fail',
                 'message': 'You do not have permission to do that.'
@@ -105,7 +103,7 @@ class Skills(Resource):
         return SkillSchema().dump(result.data).data, 201
 
     def get(self):
-        data = skillSchema.dump(SkillModel.objects()).data
+        data = skillsSchema.dump(SkillModel.objects()).data
         return data, 200
 
 class Ping(Resource):

@@ -53,6 +53,13 @@ def create_test_skills():
     result.append(create_test_skill(name='comp'))
     return result
 
+def create_test_user_with_skills():
+    result = create_test_user()
+    skills = create_test_skills()
+    result.skills = [skills[0].id,skills[1].id]
+    result.save()
+    return result
+
 def login(admin=False, active=True):
     def _login(f):
         @wraps(f)

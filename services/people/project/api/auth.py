@@ -16,7 +16,6 @@ personSchema = PersonSchema()
 
 class Login(Resource):
     def post(self):
-        print("post")
         post_data = request.get_json()
         response_object = {
             'status': 'fail',
@@ -54,7 +53,7 @@ class Logout(Resource):
 class Status(Resource):
     @authenticate
     def get(resp, self):
-        user = PersonModel.objects.get_or_404(id=ObjectId(resp))
+        user = PersonModel.objects.get_or_404(id=ObjectId(resp['id']))
         response_object = {
             'status': 'success',
             'message': 'Success.',

@@ -5,11 +5,18 @@ from project import db, app
 from project import bcrypt
 import datetime
 import jwt
-import json
 
 import flask_marshmallow as fm
 import marshmallow_mongoengine as ma
 mm = fm.Marshmallow(app)
+
+
+
+
+class SkillModel(db.Document):
+    name = db.StringField(required=True)
+    level = db.StringField(required=True, unique_with="name")  # make name and level unique together
+    description = db.StringField()
 
 
 class PersonModel(db.Document):
@@ -22,6 +29,7 @@ class PersonModel(db.Document):
     active = db.BooleanField(default=True)
     password = db.StringField()
     admin = db.BooleanField(default=False, required=True)
+    skills = db.ListField(db.ReferenceField(SkillModel),default=[])
 
     def clean(self):
         self.password = bcrypt.generate_password_hash(
@@ -36,7 +44,9 @@ class PersonModel(db.Document):
                     seconds=current_app.config.get('TOKEN_EXPIRATION_SECONDS')
                 ),
                 'iat': datetime.datetime.utcnow(),
-                'sub': {'id': str(user_id)}
+                'sub': {'id': str(user_id),
+                        'admin': self.admin,
+                        'active': self.active}
             }
             return jwt.encode(
                 payload,
@@ -51,7 +61,7 @@ class PersonModel(db.Document):
         try:
             payload = jwt.decode(
                 auth_token, current_app.config.get('SECRET_KEY'))
-            return json.dumps(payload['sub'])
+            return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
@@ -62,12 +72,6 @@ class PersonSchema(ma.ModelSchema):
     class Meta:
         model = PersonModel
     _links = mm.Hyperlinks({'uri': mm.UrlFor('people.person', _id='<id>')})
-
-
-class SkillModel(db.Document):
-    name = db.StringField(required=True)
-    level = db.StringField(required=True, unique_with="name")  # make name and level unique together
-    description = db.StringField()
 
 
 class SkillSchema(ma.ModelSchema):

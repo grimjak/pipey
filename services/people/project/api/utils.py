@@ -18,12 +18,14 @@ def authenticate(f):
             return response_object, 403
         auth_token = auth_header.split(' ')[1]
         resp = PersonModel.decode_auth_token(auth_token)
-        print(resp['id'])
+        if not isinstance(resp,dict):
+            response_object['message'] = resp
+            return response_object, 401
         if not ObjectId.is_valid(resp['id']):
             response_object['message'] = resp['id']
             return response_object, 401
-        user = PersonModel.objects.get_or_404(id=ObjectId(resp['id']))
-        if not user.active:
+        #user = PersonModel.objects.get_or_404(id=ObjectId(resp['id']))
+        if not resp['active']:
             return response_object, 401
         return f(resp, *args, **kwargs)
     return decorated_function

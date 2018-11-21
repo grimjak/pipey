@@ -3,7 +3,7 @@ import unittest
 
 from project.tests.base import BaseTestCase
 
-from utils import empty_database, create_test_user, create_test_users, login
+from utils import empty_database, create_test_user, create_test_users, create_test_skill, create_test_skills, create_test_user_with_skills, login
 
 
 class TestPeopleService(BaseTestCase):
@@ -34,6 +34,7 @@ class TestPeopleService(BaseTestCase):
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
+            print (data)
             self.assertEqual(response.status_code, 201)
             self.assertIn('bh', data['username'])
             self.assertIn('Bob', data['firstname'])
@@ -273,6 +274,37 @@ class TestPeopleService(BaseTestCase):
             self.assertEqual(response.status_code, 404)
             self.assertIn('The requested URL was not found on the server.',
                           data['message'])
+
+
+    @login(admin=True)
+    def test_add_skill_to_person(token, self):
+        person = create_test_user()
+        skill = create_test_skill()
+        with self.client:
+            response = self.client.put(
+                '/people/people/'+str(person.id),
+                data = json.dumps({'skills':[str(skill.id)]}),
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code,200)
+            self.assertEqual(len(data['skills']), 1)
+            self.assertEqual(data['skills'][0],str(skill.id))
+
+    @login()
+    def test_get_skills_from_person(token, self):
+        person = create_test_user_with_skills()
+        with self.client:
+            response = self.client.get(
+                '/people/people',
+                content_type='application/json',
+                headers={'Authorization': f'Bearer {token}'}
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code,200)
+            self.assertEqual(len(data[1]['skills']), 2)
+            self.assertEqual(data[1]['skills'][0],str(person.skills[0].id))
 
 
 if __name__ == '__main__':
