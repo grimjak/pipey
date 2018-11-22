@@ -15,7 +15,7 @@ COV.start()
 from flask.cli import FlaskGroup
 
 from project import create_app, db
-from project.tests.utils import create_test_users, create_test_skills, empty_database
+from project.tests.utils import create_test_users, create_test_skills, empty_database, load_json_test_data
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
@@ -52,6 +52,10 @@ def empty_db():
 def seed_db():
     create_test_users()
     create_test_skills()
+
+@cli.command()
+def load_test_data():
+    load_json_test_data()
 
 if __name__ == '__main__':
     cli()

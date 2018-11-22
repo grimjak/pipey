@@ -22,10 +22,13 @@ def create_test_user(username="tb",
                                        "firstname": firstname,
                                        "lastname": lastname,
                                        "employeenumber": "1",
-                                       "address": address,
                                        "password": password,
                                        "active": active,
-                                       "admin": admin})
+                                       "admin": admin,
+                                       "address": {'street_address': "23 blodstaf",
+                                                   'city': 'London',
+                                                   'postal_code': 'W1 1AA',
+                                                   'country': 'UK'}})
         p.save()
         return p
 
@@ -59,6 +62,16 @@ def create_test_user_with_skills():
     result.skills = [skills[0].id,skills[1].id]
     result.save()
     return result
+
+def load_json_test_data():
+    personSchema = PersonSchema()
+    with open('/usr/src/app/project/tests/data/people.json') as f:
+        file_data = json.load(f)
+    for l in file_data:
+        print(l)
+        p,errors = personSchema.load(l)
+        if errors: print(errors)
+        else: p.save()
 
 def login(admin=False, active=True):
     def _login(f):

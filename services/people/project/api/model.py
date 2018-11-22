@@ -18,13 +18,24 @@ class SkillModel(db.Document):
     level = db.StringField(required=True, unique_with="name")  # make name and level unique together
     description = db.StringField()
 
+class Address(db.EmbeddedDocument):
+    street_address = db.StringField()
+    city = db.StringField()
+    postal_code = db.StringField()
+    country = db.StringField()
 
 class PersonModel(db.Document):
     username = db.StringField(required=True, unique=True)
+    title = db.StringField()
     firstname = db.StringField(required=True)
     lastname = db.StringField(required=True)
+    email = db.EmailField()
+    gender = db.StringField()
+    job_title = db.StringField()
+    department = db.StringField()
+    avatar = db.URLField()
     employeenumber = db.IntField()
-    address = db.StringField()
+    address = db.EmbeddedDocumentField(Address)
     startdate = db.DateTimeField()
     active = db.BooleanField(default=True)
     password = db.StringField()
