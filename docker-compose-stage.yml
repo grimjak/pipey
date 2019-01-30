@@ -10,6 +10,7 @@ services:
       - FLASK_ENV=prod
       - APP_SETTINGS=project.config.StagingConfig
       - DATABASE_URL=people-db
+      - DATABASE_NAME=stage
       - SECRET_KEY=my_precious
     links:
       - people-db

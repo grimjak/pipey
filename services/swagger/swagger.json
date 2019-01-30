@@ -1,1 +1,340 @@
-{"info": {"version": "0.0.1", "description": "Swagger spec for documenting the people service", "title": "People Service"}, "paths": {"/auth/login": {"post": {"requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/person"}}}, "required": true, "description": "User to log in"}, "responses": {"200": {"description": "Successfully logged in"}, "404": {"description": "Password does not match"}, "400": {"description": "Invalid payload"}}, "summary": "Logs a user in"}}, "/auth/status": {"get": {"security": [{"bearerAuth": []}], "responses": {"200": {"description": "user object"}, "404": {"description": "Person not found"}}, "summary": "Returns the logged in user's status"}}, "/api/people/ping": {"get": {"responses": {"200": {"description": "Will return 'pong!'"}}, "summary": "Just a sanity check"}}, "/api/people/{id}": {"put": {"responses": {"200": {"description": "user object"}, "404": {"description": "Person not found"}, "400": {"description": "error"}}, "parameters": [{"required": true, "in": "path", "description": "ID of user to edit", "name": "id", "schema": {"type": "string"}}], "summary": "Edit an existing user"}, "get": {"responses": {"200": {"description": "user object"}, "404": {"description": "Person not found"}, "400": {"description": "errors"}}, "parameters": [{"required": true, "in": "path", "description": "ID of user to fetch", "name": "id", "schema": {"type": "string"}}], "summary": "Returns a user based on a single user ID"}, "delete": {"responses": {"200": {"description": "success"}, "404": {"description": "Person not found"}}, "parameters": [{"required": true, "in": "path", "description": "ID of user to delete", "name": "id", "schema": {"type": "string"}}], "summary": "Remove an existing user"}}, "/auth/logout": {"get": {"security": [{"bearerAuth": []}], "responses": {"200": {"description": "Successfully logged out"}}, "summary": "Logs a user out"}}, "/api/people": {"post": {"requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/person"}}}, "required": true, "description": "User to add"}, "security": [{"bearerAuth": []}], "responses": {"200": {"description": "User added"}, "401": {"description": "You do not have permission to do that"}, "400": {"description": "Ivalid payload"}}, "summary": "Adds a new user"}, "get": {"responses": {"200": {"description": "user object"}}, "summary": "Returns all users"}}}, "openapi": "3.0.0", "components": {"securitySchemes": {"bearerAuth": {"scheme": "bearer", "type": "http"}}, "schemas": {"person": {"properties": {"username": {"type": "string"}, "password": {"type": "string"}}}, "userid": {"properties": {"id": {"type": "string"}}}}}, "servers": [{"url": "52.91.189.198"}]}
+{
+    "info": {
+        "version": "0.0.1",
+        "description": "Swagger spec for documenting the people service",
+        "title": "People Service"
+    },
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/person"
+                            }
+                        }
+                    },
+                    "required": true,
+                    "description": "User to log in"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged in"
+                    },
+                    "404": {
+                        "description": "Password does not match"
+                    },
+                    "400": {
+                        "description": "Invalid payload"
+                    }
+                },
+                "summary": "Logs a user in"
+            }
+        },
+        "/auth/status": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user object"
+                    },
+                    "404": {
+                        "description": "Person not found"
+                    }
+                },
+                "summary": "Returns the logged in user's status"
+            }
+        },
+        "/people/people/ping": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Will return 'pong!'"
+                    }
+                },
+                "summary": "Just a sanity check"
+            }
+        },
+        "/people/people/{id}": {
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "user object"
+                    },
+                    "404": {
+                        "description": "Person not found"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "description": "ID of user to edit",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Edit an existing user"
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "user object"
+                    },
+                    "404": {
+                        "description": "Person not found"
+                    },
+                    "400": {
+                        "description": "errors"
+                    }
+                },
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "description": "ID of user to fetch",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Returns a user based on a single user ID"
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "404": {
+                        "description": "Person not found"
+                    }
+                },
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "description": "ID of user to delete",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Remove an existing user"
+            }
+        },
+        "/auth/logout": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out"
+                    }
+                },
+                "summary": "Logs a user out"
+            }
+        },
+        "/people/people": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/person"
+                            }
+                        }
+                    },
+                    "required": true,
+                    "description": "User to add"
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User added"
+                    },
+                    "401": {
+                        "description": "You do not have permission to do that"
+                    },
+                    "400": {
+                        "description": "Ivalid payload"
+                    }
+                },
+                "summary": "Adds a new user"
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "user object"
+                    }
+                },
+                "summary": "Returns all users"
+            }
+        },
+        "/people/skills": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/skill"
+                            }
+                        }
+                    },
+                    "required": true,
+                    "description": "Skill to add"
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Skill added"
+                    },
+                    "401": {
+                        "description": "You do not have permission to do that"
+                    },
+                    "400": {
+                        "description": "Ivalid payload"
+                    }
+                },
+                "summary": "Adds a new skill"
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "skill object"
+                    }
+                },
+                "summary": "Returns all skills"
+            }
+        },
+        "/people/skills/{id}": {
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Skill object"
+                    },
+                    "404": {
+                        "description": "Skill not found"
+                    },
+                    "400": {
+                        "description": "error"
+                    }
+                },
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "description": "ID of skill to edit",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Edit an existing skill"
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "skill object"
+                    },
+                    "404": {
+                        "description": "Skill not found"
+                    },
+                    "400": {
+                        "description": "errors"
+                    }
+                },
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "description": "ID of skill to fetch",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Returns a skill based on a single user ID"
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "404": {
+                        "description": "Skill not found"
+                    }
+                },
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "description": "ID of skill to delete",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "summary": "Remove an existing skill"
+            }
+        }
+    },
+    "openapi": "3.0.0",
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "scheme": "bearer",
+                "type": "http"
+            }
+        },
+        "schemas": {
+            "person": {
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "userid": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "52.91.189.198"
+        }
+    ]
+}

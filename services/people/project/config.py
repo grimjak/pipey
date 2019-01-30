@@ -14,6 +14,7 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     MONGODB_HOST = os.environ.get('DATABASE_URL')
+    MONGODB_DB = os.environ.get('DATABASE_NAME')
     DEBUG_TB_ENABLED = True  # new
     BCRYPT_LOG_ROUNDS = 4
 
@@ -21,6 +22,7 @@ class DevelopmentConfig(BaseConfig):
 class TestingConfig(BaseConfig):
     TESTING = True
     MONGODB_HOST = os.environ.get('DATABASE_TEST_URL')
+    MONGODB_DB = os.environ.get('DATABASE_TEST_NAME')
     BCRYPT_LOG_ROUNDS = 4
     TOKEN_EXPIRATION_DAYS = 0
     TOKEN_EXPIRATION_SECONDS = 4
@@ -28,8 +30,10 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     MONGODB_HOST = os.environ.get('DATABASE_URL')
+    MONGODB_DB = os.environ.get('DATABASE_NAME')
     DEBUG = False
 
 
 class StagingConfig(BaseConfig):
     MONGODB_HOST = os.environ.get('DATABASE_URL')
+    MONGODB_DB = 'staging'

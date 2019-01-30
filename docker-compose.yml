@@ -8,6 +8,8 @@ services:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=people-db
+      - DATABASE_NAME=dev
+      - DATABASE_TEST_NAME=test
       - SECRET_KEY=my_precious
     volumes:
       - './services/people:/usr/src/app'
@@ -66,3 +68,15 @@ services:
       - URL=swagger.json
     depends_on:
       - people
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  

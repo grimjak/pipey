@@ -64,11 +64,12 @@ def create_test_user_with_skills():
     return result
 
 def load_json_test_data():
+    empty_database()
     personSchema = PersonSchema()
     with open('/usr/src/app/project/tests/data/people.json') as f:
         file_data = json.load(f)
     for l in file_data:
-        print(l)
+        l['password'] = 'test'
         p,errors = personSchema.load(l)
         if errors: print(errors)
         else: p.save()

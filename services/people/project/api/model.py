@@ -10,7 +10,17 @@ import flask_marshmallow as fm
 import marshmallow_mongoengine as ma
 mm = fm.Marshmallow(app)
 
+from mongoengine import signals
 
+def handler(event):
+    def decorator(fn):
+        def apply(cls):
+            event.connect(fn, sender=cls)
+            return cls
+
+        fn.apply = apply
+        return fn
+    return decorator
 
 
 class SkillModel(db.Document):
@@ -25,6 +35,12 @@ class Address(db.EmbeddedDocument):
     country = db.StringField()
 
 class PersonModel(db.Document):
+    meta = {'indexes': [
+                {'fields': ['$username', '$firstname', '$lastname', '$job_title', '$department'],
+                 'default_language': 'english'
+                }
+            ]}
+            
     username = db.StringField(required=True, unique=True)
     title = db.StringField()
     firstname = db.StringField(required=True)
@@ -77,15 +93,24 @@ class PersonModel(db.Document):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+    
+    @classmethod
+    def pre_save(cls, sender, document, **kwargs):
+        print (document)
+        
 
+signals.pre_save.connect(PersonModel.pre_save, sender=PersonModel)
 
 class PersonSchema(ma.ModelSchema):
     class Meta:
         model = PersonModel
+        load_only = ("password")
+        #strict = True
     _links = mm.Hyperlinks({'uri': mm.UrlFor('people.person', _id='<id>')})
 
 
 class SkillSchema(ma.ModelSchema):
     class Meta:
         model = SkillModel
+        #strict = True
     _links = mm.Hyperlinks({'uri': mm.UrlFor('people.skill', _id='<id>')})

@@ -71,7 +71,7 @@ class App extends Component {
                     title={this.state.title}
                     isAuthenticated={this.state.isAuthenticated}
                 />
-                <section className="section">
+                <section className="section has-background-light">
                     <div className="container">
                         {this.state.messageName && this.state.messageType && 
                             <Message
@@ -81,13 +81,11 @@ class App extends Component {
                             />
                         }
                         <div className="columns">
-                            <div className="column is-half">
+                            <div className="column">
                             <Switch>
                                 <Route exact path='/' render={() => (
                                 <div>
-                                    <UsersList 
-                                        users={this.state.users}
-                                    />
+                                    <UsersList/>
                                 </div>
                                 )} />
                                 <Route exact path='/about' component={About}/>

@@ -8,6 +8,7 @@ flask-marshmallow
 pymongo
 marshmallow_mongoengine
 mongoengine
+webargs
 pytest
 gunicorn==19.8.1
 coverage==4.5.1

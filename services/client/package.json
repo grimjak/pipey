@@ -10,7 +10,12 @@
     "react-router-dom": "^4.3.1",
     "enzyme": "3.3.0",
     "enzyme-adapter-react-16": "1.1.1",
-    "bulma": "^0.7.1"
+    "bulma": "^0.7.1",
+    "redux": "^4.0.1",
+    "react-redux": "^5.1.1",
+    "redux-thunk": "^2.3.0",
+    "formik": "^1.4.0",
+    "@fortawesome/fontawesome-free": "^5.6.3"
   },
   "scripts": {
     "start": "react-scripts start",

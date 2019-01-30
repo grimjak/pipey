@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 
 from project.api.people_resources import PersonSchema
 from project.api.model import PersonModel
-from project import bcrypt
+from project import bcrypt, app
 
 from bson.objectid import ObjectId
 from project.api.utils import authenticate
@@ -25,7 +25,7 @@ class Login(Resource):
             return response_object, 400
         username = post_data.get('username')
         password = post_data.get('password')
-        # now get the data from the db
+        # now get the data from the db    
         data = PersonModel.objects.get_or_404(username=username)
         # need better error messages if no password
         if bcrypt.check_password_hash(data.password, password):

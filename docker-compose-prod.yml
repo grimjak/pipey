@@ -10,6 +10,7 @@ services:
       - FLASK_ENV=prod
       - APP_SETTINGS=project.config.ProductionConfig
       - DATABASE_URL=people-db
+      - DATABASE_NAME=prod
       - SECRET_KEY=${SECRET_KEY}
     links:
       - people-db

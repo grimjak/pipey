@@ -28,7 +28,9 @@ class TestDevelopmentConfig(TestCase):
         self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
         self.assertTrue(app.config['TOKEN_EXPIRATION_DAYS'] == 30)
         self.assertTrue(app.config['TOKEN_EXPIRATION_SECONDS'] == 0)
-
+        self.assertTrue(
+            app.config['MONGODB_DB'] == os.environ.get('DATABASE_NAME')
+        )
 
 class TestTestingConfig(TestCase):
     def create_app(self):
@@ -50,6 +52,10 @@ class TestTestingConfig(TestCase):
         self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
         self.assertTrue(app.config['TOKEN_EXPIRATION_DAYS'] == 0)
         self.assertTrue(app.config['TOKEN_EXPIRATION_SECONDS'] == 4)
+        self.assertTrue(
+            app.config['MONGODB_DB'] == os.environ.get('DATABASE_TEST_NAME')
+        )
+
 
 
 class TestProductionConfig(TestCase):
@@ -67,6 +73,9 @@ class TestProductionConfig(TestCase):
         self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 13)
         self.assertTrue(app.config['TOKEN_EXPIRATION_DAYS'] == 30)
         self.assertTrue(app.config['TOKEN_EXPIRATION_SECONDS'] == 0)
+        self.assertTrue(
+            app.config['MONGODB_DB'] == os.environ.get('DATABASE_NAME')
+        )
 
 
 if __name__ == '__main__':
