@@ -16,3 +16,4 @@ flake8===3.5.0
 flask-debugtoolbar==0.10.1
 flask-bcrypt==0.7.1
 pyjwt==1.6.4
+kafka-python

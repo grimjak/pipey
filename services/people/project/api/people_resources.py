@@ -68,6 +68,8 @@ class People(Resource):
         jsonrequest = request.get_json()
         result = PersonSchema().load(jsonrequest)
         if result.errors:
+            print (result.errors)
+            app.logger.warn(result.errors)
             return result.errors, 400
         if not resp['admin']:
             response_object = {

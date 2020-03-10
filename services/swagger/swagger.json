@@ -334,7 +334,7 @@
     },
     "servers": [
         {
-            "url": "52.91.189.198"
+            "url": "http://localhost"
         }
     ]
 }

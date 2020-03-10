@@ -97,7 +97,7 @@ export function updateUser(index,user) {
 
 export function createUser(user) {
     const options = {
-        url: `${process.env.REACT_APP_USERS_SERVICE_URL}/people/people/`,
+        url: `${process.env.REACT_APP_USERS_SERVICE_URL}/people/people`,
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ export function createUser(user) {
     };
     return (dispatch) => {
         dispatch(userIsCreating(true));
-        dispatch(appendToUserStore(user))
+        //dispatch(appendToUserStore(user))
         axios(options)
         .then((res) => {
             dispatch(userIsCreating(false));

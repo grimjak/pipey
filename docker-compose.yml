@@ -15,8 +15,10 @@ services:
       - './services/people:/usr/src/app'
     links:
       - people-db
+
   people-db:
     image: mongo:4.0
+
   tasks:
     build: ./services/tasks
     ports:
@@ -32,6 +34,7 @@ services:
       - tasks-db
   tasks-db:
     image: mongo:4.0
+
   nginx:
     build:
       context: ./services/nginx
@@ -42,6 +45,7 @@ services:
     depends_on: 
       - people
       - client
+
   client:
     build:
       context: ./services/client
@@ -56,6 +60,7 @@ services:
       - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     depends_on:
       - people
+
   swagger:
     build:
       context: ./services/swagger
@@ -68,10 +73,12 @@ services:
       - URL=swagger.json
     depends_on:
       - people
+
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+
   kafka:
     image: wurstmeister/kafka
     ports:
@@ -79,4 +86,18 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  
+      JMX_PORT: 9999
+      KAFKA_CREATE_TOPICS: test-topic-1:1:2,test-topic-2:1:2,test-topic-3:1:2
+
+
+  kafka-manager:
+    image: sheepkiller/kafka-manager:latest
+    ports:
+      - "9000:9000"
+    links:
+      - zookeeper
+      - kafka
+    environment:
+      ZK_HOSTS: zookeeper:2181
+      APPLICATION_SECRET: letmein
+      KM_ARGS: -Djava.net.preferIPv4Stack=true

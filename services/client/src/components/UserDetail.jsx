@@ -1,64 +1,69 @@
 import React from 'react';
-import { Formik, Field, FieldArray } from 'formik';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import { connect } from 'react-redux';
 import { updateUser, createUser } from '../redux/actions/users';
 
 
 //need to grab a template from somewhere to drive the layout
 const UserDetail = (props) => {
-    var filteredFields = {fields:[]};
+    var filteredFields = {};
+    var types = {};
     var create = false;
     for(var i=0; i<props.fieldsToShow.length; i++)
     {
       var field = props.fieldsToShow[i];
-      if (props.user) filteredFields['fields'].push({name: field, value: props.user.user[field], type: props.types[field]})
+      if (props.user) 
+      {
+        filteredFields[field] = props.user.user[field]
+      }
       else
       {
-        filteredFields['fields'].push({name: field, value: "", type: props.types[field]})
+        filteredFields[field] = null
         create = true;
       }
     }
+    filteredFields['types'] = props.types
     return ( 
       <div>
         <Formik
           initialValues={filteredFields}
           onSubmit={(values, actions) => {
-            const user = Object.assign(props.user.user,values)
             if (create) {
-              props.updateUser(props.user.index,user)
+              console.log(values)
+              props.createUser(values)
             }
             else {
-              props.createUser(user)
+              const user = Object.assign(props.user.user,values)
+              props.updateUser(props.user.index,user)
             }
             setTimeout(() => {
               actions.setSubmitting(false);
             }, 1000);
           }}
-          render={(props: FormikProps<Values>) => (
-            <form onSubmit={props.handleSubmit}>
+          render={({ values }) => (
+            <Form>
               <figure className="image is-4by3">
-                  <img src={props.values['avatar']} alt="Large avatar Placeholder"></img>
+                  {console.log(values)}
+                  <img src={values.avatar} alt="Large avatar Placeholder"></img>
               </figure>
-              <FieldArray name="fields"
-              render={ arrayHelpers => (
-                <div>
-                  props.values.fields.map((field, index) => (
-                  <div key={index}>
-                    return(<Field name={`fields[${index}].name`} value={field.value} static="is-static" component={CustomTextInputComponent}/>)
-                  </div>
-                  )
-
-                })
-                </div>
-              )}
-              />
+                  {Object.keys(values).map((field, index) => {
+                    switch(values.types[field]) {
+                      case 'StringField' : 
+                        return <div key={index}><Field name={field} static="is-static" component={CustomTextInputComponent}/></div>
+                      case 'BooleanField' :
+                        return <div key={index}><Field name={field} static="is-static" component={CustomCheckboxInputComponent}/></div>
+                      default :
+                        return null
+                    }
+                  })
+                }
               <button className="button" type="submit">{create?"Create":"Update"}</button>
-            </form>
+            </Form>
           )}
         />
       </div>
     )
-};
+}
 
 const CustomTextInputComponent = ({
     field, // { name, value, onChange, onBlur }

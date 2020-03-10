@@ -61,3 +61,17 @@ API gateways - Single api calling multiple services
 Example Workflows
 * Assign person to desk
 *
+
+TODO
+* Get tests working again and check coverage
+* Think about authentication and authorization accross all services
+* Staging and production deployment to kubernetes
+
+
+
+
+
+
+
+
+

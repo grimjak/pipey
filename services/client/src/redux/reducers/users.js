@@ -4,7 +4,7 @@ const initialState = {
     page: 0,
     isLoading: false,
     hasErrored: false,
-    fieldsToShow: ['username','title','firstname','lastname','gender','email','active','admin','address'],
+    fieldsToShow: ['avatar','username','title','firstname','lastname','gender','email','active','admin','address'],
     users: [],
     types: []
 };

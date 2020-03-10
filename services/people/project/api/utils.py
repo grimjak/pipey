@@ -4,7 +4,7 @@ from flask import request
 from bson.objectid import ObjectId
 
 from project.api.model import PersonModel
-
+from project import app
 
 def authenticate(f):
     @wraps(f)
